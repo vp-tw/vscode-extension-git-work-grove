@@ -25,12 +25,40 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Create release PR or publish
+      - name: Create release PR
         id: changesets
         uses: changesets/action@v1
         with:
           version: pnpm changeset version
-          publish: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to Marketplace and create GitHub release
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: |
+          set -eo pipefail
+
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v${VERSION}"
+
+          if git ls-remote --tags origin "$TAG" | grep -q "$TAG"; then
+            echo "Tag $TAG already exists — skipping"
+            exit 0
+          fi
+
+          if git diff HEAD^ HEAD -- package.json 2>/dev/null | grep -q '"version"'; then
+            echo "Version changed — proceeding with release"
+          elif git rev-parse HEAD^ >/dev/null 2>&1; then
+            echo "Version unchanged in this commit — skipping"
+            exit 0
+          else
+            echo "First commit or unable to check diff — proceeding with release"
+          fi
+
+          pnpm release
+          git tag "$TAG"
+          git push origin "$TAG"
+          gh release create "$TAG" --generate-notes --title "$TAG"
+        env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
