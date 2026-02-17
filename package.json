@@ -354,6 +354,7 @@
     "@vp-tw/tsconfig": "latest",
     "@vscode/vsce": "latest",
     "esbuild": "latest",
+    "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-package-json": "^0.88.3",
     "typescript": "latest",
