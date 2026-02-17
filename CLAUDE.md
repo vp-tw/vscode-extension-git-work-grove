@@ -36,6 +36,16 @@ Design specs live in `docs/spec/`. These are the **source of truth** for how fea
 
 With favorites, these become 8 item types (4 normal + 4 favorite). Never conflate repository workspace with worktree workspace — they have different available template variables and may display different information.
 
+## Documentation Maintenance
+
+When modifying features or behavior, **always update the corresponding documentation in the same work session**:
+
+- **README.md** — Update the Usage, Settings, Commands, or Features sections if user-facing behavior changes
+- **docs/templates.md** — Update if template variables, syntax, or defaults change
+- **docs/spec/*.md** — Update the relevant spec (per Spec Maintenance Rules above)
+
+All three layers (README, user docs, specs) must stay in sync with the code.
+
 ## Code Conventions
 
 - **ESLint**: Uses `@antfu/eslint-config` with `perfectionist/sort-named-imports` — named imports MUST be alphabetically sorted
