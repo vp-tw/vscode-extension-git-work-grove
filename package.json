@@ -25,7 +25,6 @@
   },
   "homepage": "https://github.com/vp-tw/vscode-extension-git-work-grove#readme",
   "qna": "marketplace",
-  "private": true,
   "preview": true,
   "engines": {
     "vscode": "^1.95.0"
@@ -326,10 +325,15 @@
     "lint:oxfmt:dry": "oxfmt .",
     "local:install": "pnpm build && vsce package --no-dependencies -o git-work-grove.vsix && code --install-extension git-work-grove.vsix --force && rm git-work-grove.vsix",
     "package": "vsce package",
+    "prepublishOnly": "echo \"Error: Use 'pnpm release' to publish to VS Code Marketplace. Do not use npm publish.\" && exit 1",
     "publish": "vsce publish",
-    "release": "pnpm build && vsce publish",
+    "release": "vsce publish",
     "test": "vitest run",
+    "vscode:prepublish": "pnpm build",
     "watch": "pnpm run build:dev --watch"
+  },
+  "vsce": {
+    "dependencies": false
   },
   "packageManager": "pnpm@10.28.2",
   "pnpm": {
