@@ -1,0 +1,13 @@
+{
+  "configurations": [
+    {
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
+      "name": "Run Extension",
+      "outFiles": ["${workspaceFolder}/dist/**/*.cjs"],
+      "preLaunchTask": "npm: build:dev",
+      "request": "launch",
+      "type": "extensionHost"
+    }
+  ],
+  "version": "0.2.0"
+}

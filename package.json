@@ -1,0 +1,353 @@
+{
+  "name": "git-work-grove",
+  "displayName": "Git WorkGrove",
+  "description": "A code-workspace friendly worktree explorer for VS Code",
+  "version": "0.1.0",
+  "publisher": "vdustr",
+  "license": "MIT",
+  "icon": "icon.png",
+  "categories": [
+    "SCM Providers"
+  ],
+  "keywords": [
+    "git",
+    "worktree",
+    "workspace",
+    "code-workspace",
+    "source-control"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vp-tw/vscode-extension-git-work-grove.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vp-tw/vscode-extension-git-work-grove/issues"
+  },
+  "homepage": "https://github.com/vp-tw/vscode-extension-git-work-grove#readme",
+  "qna": "marketplace",
+  "private": true,
+  "preview": true,
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "type": "module",
+  "main": "./dist/extension.cjs",
+  "contributes": {
+    "views": {
+      "scm": [
+        {
+          "id": "gitWorkGrove.worktrees",
+          "name": "WorkGrove",
+          "icon": "$(folder-library)",
+          "when": "gitOpenRepositoryCount > 0",
+          "contextualTitle": "Git WorkGrove"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "gitWorkGrove.worktrees",
+        "contents": "No worktrees found.",
+        "when": "gitWorkGrove.hasRepository"
+      },
+      {
+        "view": "gitWorkGrove.worktrees",
+        "contents": "Git is not available.\n[Learn More](https://git-scm.com)",
+        "when": "gitWorkGrove.gitUnavailable"
+      }
+    ],
+    "commands": [
+      {
+        "command": "gitWorkGrove.pruneWorktrees",
+        "title": "Git WorkGrove: Prune Worktrees",
+        "enablement": "gitWorkGrove.hasRepository"
+      },
+      {
+        "command": "gitWorkGrove.openInNewWindow",
+        "title": "Git WorkGrove: Open in New Window",
+        "icon": "$(link-external)",
+        "enablement": "gitWorkGrove.hasRepository"
+      },
+      {
+        "command": "gitWorkGrove.openInCurrentWindow",
+        "title": "Git WorkGrove: Open in Current Window",
+        "icon": "$(window)",
+        "enablement": "gitWorkGrove.hasRepository"
+      },
+      {
+        "command": "gitWorkGrove.addFavorite",
+        "title": "Git WorkGrove: Add Favorite",
+        "icon": "$(star-empty)",
+        "enablement": "gitWorkGrove.hasRepository"
+      },
+      {
+        "command": "gitWorkGrove.removeFavorite",
+        "title": "Git WorkGrove: Remove Favorite",
+        "icon": "$(star-full)",
+        "enablement": "gitWorkGrove.hasRepository"
+      },
+      {
+        "command": "gitWorkGrove.revealInOS",
+        "title": "Git WorkGrove: Reveal in Finder",
+        "enablement": "gitWorkGrove.hasRepository"
+      },
+      {
+        "command": "gitWorkGrove.refresh",
+        "title": "Git WorkGrove: Refresh",
+        "icon": "$(refresh)",
+        "enablement": "gitWorkGrove.hasRepository"
+      },
+      {
+        "command": "gitWorkGrove.showOutput",
+        "title": "Git WorkGrove: Show Output"
+      },
+      {
+        "command": "gitWorkGrove.cleanStaleFavorites",
+        "title": "Git WorkGrove: Clean Stale Favorites",
+        "enablement": "gitWorkGrove.hasRepository"
+      },
+      {
+        "command": "gitWorkGrove.moveFavoriteUp",
+        "title": "Git WorkGrove: Move Favorite Up",
+        "icon": "$(chevron-up)",
+        "enablement": "gitWorkGrove.hasRepository"
+      },
+      {
+        "command": "gitWorkGrove.moveFavoriteDown",
+        "title": "Git WorkGrove: Move Favorite Down",
+        "icon": "$(chevron-down)",
+        "enablement": "gitWorkGrove.hasRepository"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "gitWorkGrove.refresh",
+          "when": "view == gitWorkGrove.worktrees",
+          "group": "navigation@1"
+        },
+        {
+          "command": "gitWorkGrove.pruneWorktrees",
+          "when": "view == gitWorkGrove.worktrees",
+          "group": "overflow@1"
+        },
+        {
+          "command": "gitWorkGrove.cleanStaleFavorites",
+          "when": "view == gitWorkGrove.worktrees",
+          "group": "overflow@2"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "gitWorkGrove.openInNewWindow",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./",
+          "group": "navigation@1"
+        },
+        {
+          "command": "gitWorkGrove.openInCurrentWindow",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./",
+          "group": "navigation@2"
+        },
+        {
+          "command": "gitWorkGrove.revealInOS",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./",
+          "group": "navigation@3"
+        },
+        {
+          "command": "gitWorkGrove.addFavorite",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository/ && !(viewItem =~ /favorite/)",
+          "group": "inline"
+        },
+        {
+          "command": "gitWorkGrove.removeFavorite",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /favorite/",
+          "group": "inline"
+        },
+        {
+          "command": "gitWorkGrove.moveFavoriteUp",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^favorite\\./",
+          "group": "inline"
+        },
+        {
+          "command": "gitWorkGrove.moveFavoriteDown",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^favorite\\./",
+          "group": "inline"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Git WorkGrove",
+      "properties": {
+        "git-work-grove.openBehavior": {
+          "type": "string",
+          "enum": [
+            "ask",
+            "newWindow",
+            "currentWindow"
+          ],
+          "default": "ask",
+          "description": "Default action when opening a workspace.",
+          "scope": "resource"
+        },
+        "git-work-grove.workspaceFile.include": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "*.code-workspace"
+          ],
+          "description": "Glob patterns for workspace file scanning.",
+          "scope": "resource"
+        },
+        "git-work-grove.workspaceFile.exclude": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Glob patterns to exclude from workspace file scanning.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.repository.label": {
+          "type": "string",
+          "default": "Repository",
+          "markdownDescription": "Label template for the Repository header. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.repository.description": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Description template for the Repository header. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.worktree.label": {
+          "type": "string",
+          "default": "{name}",
+          "markdownDescription": "Label template for linked worktrees. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.worktree.description": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Description template for linked worktrees. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.repositoryWorkspace.label": {
+          "type": "string",
+          "default": "{name}",
+          "markdownDescription": "Label template for workspace files under Repository. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.repositoryWorkspace.description": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Description template for workspace files under Repository. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.worktreeWorkspace.label": {
+          "type": "string",
+          "default": "{name}",
+          "markdownDescription": "Label template for workspace files under linked worktrees. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`, `{worktree}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.worktreeWorkspace.description": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Description template for workspace files under linked worktrees. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`, `{worktree}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.favoriteRepository.label": {
+          "type": "string",
+          "default": "Repository",
+          "markdownDescription": "Label template for favorited Repository. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.favoriteRepository.description": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Description template for favorited Repository. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.favoriteWorktree.label": {
+          "type": "string",
+          "default": "{name}",
+          "markdownDescription": "Label template for favorited worktrees. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.favoriteWorktree.description": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Description template for favorited worktrees. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.favoriteRepositoryWorkspace.label": {
+          "type": "string",
+          "default": "{name}",
+          "markdownDescription": "Label template for favorited workspace files from Repository. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.favoriteRepositoryWorkspace.description": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Description template for favorited workspace files from Repository. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.favoriteWorktreeWorkspace.label": {
+          "type": "string",
+          "default": "{name}",
+          "markdownDescription": "Label template for favorited workspace files from linked worktrees. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`, `{worktree}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.favoriteWorktreeWorkspace.description": {
+          "type": "string",
+          "default": "🌲 {worktree}",
+          "markdownDescription": "Description template for favorited workspace files from linked worktrees. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`, `{worktree}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.favorites": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Ordered list of favorited item paths.",
+          "scope": "application"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "esbuild src/extension.ts --bundle --outfile=dist/extension.cjs --external:vscode --format=cjs --platform=node --minify --target=node20",
+    "build:dev": "esbuild src/extension.ts --bundle --outfile=dist/extension.cjs --external:vscode --format=cjs --platform=node --sourcemap --target=node20",
+    "lint:es": "eslint .",
+    "lint:es:dry": "eslint . --fix-dry-run",
+    "lint:oxfmt": "oxfmt --check .",
+    "lint:oxfmt:dry": "oxfmt .",
+    "local:install": "pnpm build && vsce package --no-dependencies -o git-work-grove.vsix && code --install-extension git-work-grove.vsix --force && rm git-work-grove.vsix",
+    "package": "vsce package",
+    "publish": "vsce publish",
+    "release": "pnpm build && vsce publish",
+    "test": "vitest run",
+    "watch": "pnpm run build:dev --watch"
+  },
+  "packageManager": "pnpm@10.28.2",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^7.4.3",
+    "@changesets/cli": "^2.29.8",
+    "@types/vscode": "^1.95.0",
+    "@vp-tw/eslint-config": "latest",
+    "@vp-tw/tsconfig": "latest",
+    "@vscode/vsce": "latest",
+    "esbuild": "latest",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-package-json": "^0.88.3",
+    "typescript": "latest",
+    "vitest": "latest"
+  }
+}

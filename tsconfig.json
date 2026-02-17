@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "extends": "@vp-tw/tsconfig/base/bundler/tsconfig",
+  "include": ["src"]
+}
