@@ -80,7 +80,6 @@ The WORKGROVE panel header provides:
 | **Refresh** | Header icon | Re-scan worktrees and workspace files |
 | **Prune Worktrees** | `...` overflow menu | Run `git worktree prune` to clean up stale records |
 | **Clean Stale Favorites** | `...` overflow menu | Remove favorites that no longer exist on disk |
-| **Show Output** | Command Palette | Open the Git WorkGrove output channel for debugging |
 
 ### Open Behavior
 
@@ -138,7 +137,7 @@ These commands appear when right-clicking items in the tree view:
 |---------|-------------|
 | Open in New Window | Open worktree or workspace file in a new VS Code window |
 | Open in Current Window | Open in the current VS Code window |
-| Reveal in Finder / Explorer | Open the item's location in your OS file manager |
+| Reveal in Finder | Open the item's location in your OS file manager |
 | Add Favorite | Pin this item to the Favorites section |
 | Remove Favorite | Unpin from Favorites |
 | Move Favorite Up / Down | Reorder within Favorites |
