@@ -38,7 +38,7 @@
           "id": "gitWorkGrove.worktrees",
           "name": "WorkGrove",
           "icon": "$(folder-library)",
-          "when": "gitOpenRepositoryCount > 0",
+          "when": "gitOpenRepositoryCount > 0 || gitWorkGrove.gitUnavailable",
           "contextualTitle": "Git WorkGrove"
         }
       ]
@@ -46,13 +46,18 @@
     "viewsWelcome": [
       {
         "view": "gitWorkGrove.worktrees",
-        "contents": "No worktrees found.",
-        "when": "gitWorkGrove.hasRepository"
+        "contents": "Git is not available.\n[Learn More](https://git-scm.com)",
+        "when": "gitWorkGrove.gitUnavailable"
       },
       {
         "view": "gitWorkGrove.worktrees",
-        "contents": "Git is not available.\n[Learn More](https://git-scm.com)",
-        "when": "gitWorkGrove.gitUnavailable"
+        "contents": "No git repository found in the current workspace.",
+        "when": "!gitWorkGrove.gitUnavailable && !gitWorkGrove.hasRepository"
+      },
+      {
+        "view": "gitWorkGrove.worktrees",
+        "contents": "No worktrees found.",
+        "when": "gitWorkGrove.hasRepository"
       }
     ],
     "commands": [

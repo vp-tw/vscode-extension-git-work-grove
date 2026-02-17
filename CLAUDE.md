@@ -23,6 +23,7 @@ Design specs live in `docs/spec/`. These are the **source of truth** for how fea
 | `docs/spec/commands.md` | All commands, menu placement, behaviors |
 | `docs/spec/workspace-scanning.md` | File discovery, include/exclude patterns, limits |
 | `docs/spec/open-behavior.md` | Open modes, URI resolution, click handling |
+| `docs/spec/empty-states.md` | Git unavailable, no repository, no worktrees messages |
 
 ## The 4 Fundamental Types
 
