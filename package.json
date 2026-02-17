@@ -2,7 +2,7 @@
   "name": "git-work-grove",
   "displayName": "Git WorkGrove",
   "description": "A code-workspace friendly worktree explorer for VS Code",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "vdustr",
   "license": "MIT",
   "icon": "icon.png",
