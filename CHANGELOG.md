@@ -1,5 +1,11 @@
 # git-work-grove
 
+## 0.1.2
+
+### Patch Changes
+
+- b85fbcc: Add screenshot and comprehensive usage documentation to README
+
 ## 0.1.1
 
 ### Patch Changes
