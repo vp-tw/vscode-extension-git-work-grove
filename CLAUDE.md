@@ -46,6 +46,19 @@ When modifying features or behavior, **always update the corresponding documenta
 
 All three layers (README, user docs, specs) must stay in sync with the code.
 
+## Release Checklist
+
+Every PR that affects published content must include a **changeset** (`.changeset/*.md`). This includes:
+
+- New features or commands
+- Bug fixes
+- Behavior changes
+- README or user-facing documentation changes
+
+Only skip changesets for changes that are completely invisible to published output (e.g., CI config, dev tooling, specs, CLAUDE.md).
+
+Always update **README.md** when user-facing behavior changes (new commands, settings, features).
+
 ## Code Conventions
 
 - **ESLint**: Uses `@antfu/eslint-config` with `perfectionist/sort-named-imports` — named imports MUST be alphabetically sorted
