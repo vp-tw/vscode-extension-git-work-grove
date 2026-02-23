@@ -159,6 +159,25 @@ Design documents for contributors and AI-assisted development:
 - [Open Behavior](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/spec/open-behavior.md) — Open modes, URI resolution, click handling
 - [Empty States](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/spec/empty-states.md) — Git unavailable, no repository, no worktrees messages
 
+## Installation
+
+### VS Code Marketplace
+
+Install from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=vdustr.git-work-grove):
+
+1. Open VS Code
+2. Go to Extensions (`Cmd+Shift+X` / `Ctrl+Shift+X`)
+3. Search for **Git WorkGrove**
+4. Click **Install**
+
+### Open VSX Registry
+
+Install from [Open VSX](https://open-vsx.org/extension/vdustr/git-work-grove) for VS Code alternatives (VSCodium, code-server, Gitpod, etc.):
+
+1. Open your editor's extension panel
+2. Search for **Git WorkGrove**
+3. Click **Install**
+
 ## Requirements
 
 - VS Code 1.95.0+

@@ -33,7 +33,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish to Marketplace and create GitHub release
+      - name: Publish and create GitHub release
         if: steps.changesets.outputs.hasChangesets == 'false'
         run: |
           set -eo pipefail
@@ -55,10 +55,21 @@ jobs:
             echo "First commit or unable to check diff — proceeding with release"
           fi
 
-          pnpm release
+          pnpm build
+          pnpm package
+
+          echo "Publishing to VS Code Marketplace..."
+          pnpm release:marketplace
+
+          echo "Publishing to Open VSX..."
+          pnpm release:ovsx
+
+          rm -f *.vsix
+
           git tag "$TAG"
           git push origin "$TAG"
           gh release create "$TAG" --generate-notes --title "$TAG"
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -329,10 +329,11 @@
     "lint:oxfmt": "oxfmt --check .",
     "lint:oxfmt:dry": "oxfmt .",
     "local:install": "pnpm build && vsce package --no-dependencies -o git-work-grove.vsix && code --install-extension git-work-grove.vsix --force && rm git-work-grove.vsix",
-    "package": "vsce package",
-    "prepublishOnly": "echo \"Error: Use 'pnpm release' to publish to VS Code Marketplace. Do not use npm publish.\" && exit 1",
-    "publish": "vsce publish",
-    "release": "vsce publish",
+    "package": "vsce package --no-dependencies",
+    "prepublishOnly": "echo \"Error: Use 'pnpm release' to publish. Do not use npm publish.\" && exit 1",
+    "release": "pnpm build && pnpm package && vsce publish --packagePath *.vsix && ovsx publish *.vsix && rm -f *.vsix",
+    "release:marketplace": "vsce publish --packagePath *.vsix",
+    "release:ovsx": "ovsx publish *.vsix",
     "test": "vitest run",
     "vscode:prepublish": "pnpm build",
     "watch": "pnpm run build:dev --watch"
@@ -357,6 +358,7 @@
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-package-json": "^0.88.3",
+    "ovsx": "^0.10.9",
     "typescript": "latest",
     "vitest": "latest"
   }
