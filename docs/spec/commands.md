@@ -13,6 +13,8 @@ All commands use the `gitWorkGrove.*` prefix.
 | `removeFavorite` | Remove Favorite | `$(star-full)` | `gitWorkGrove.hasRepository` |
 | `moveFavoriteUp` | Move Favorite Up | `$(chevron-up)` | `gitWorkGrove.hasRepository` |
 | `moveFavoriteDown` | Move Favorite Down | `$(chevron-down)` | `gitWorkGrove.hasRepository` |
+| `copyName` | Copy Name | — | `gitWorkGrove.hasRepository` |
+| `copyPath` | Copy Path | — | `gitWorkGrove.hasRepository` |
 | `revealInOS` | Reveal in Finder | — | `gitWorkGrove.hasRepository` |
 | `refresh` | Refresh | `$(refresh)` | `gitWorkGrove.hasRepository` |
 | `showOutput` | Show Output | — | *(always)* |
@@ -35,6 +37,8 @@ All commands use the `gitWorkGrove.*` prefix.
 | `openInNewWindow` | `navigation@1` | `viewItem =~ /^worktree\|^workspaceFile\|^repository\|^favorite\./` |
 | `openInCurrentWindow` | `navigation@2` | *(same)* |
 | `revealInOS` | `navigation@3` | *(same)* |
+| `copyName` | `5_cutcopypaste@1` | *(same)* |
+| `copyPath` | `5_cutcopypaste@2` | *(same)* |
 | `addFavorite` | `inline` | `viewItem =~ /^worktree\|^workspaceFile\|^repository/` AND NOT `viewItem =~ /favorite/` |
 | `removeFavorite` | `inline` | `viewItem =~ /favorite/` |
 | `moveFavoriteUp` | `inline` | `viewItem =~ /^favorite\./` |
@@ -62,6 +66,19 @@ Handled by `treeView.onDidChangeSelection`, not a registered command. Triggers o
 Uses `openBehavior` setting: `"ask"` shows a QuickPick, `"newWindow"` / `"currentWindow"` opens directly. The QuickPick includes "Always" options that persist the choice.
 
 WorktreeItem clicks are NOT handled — clicking a worktree expands/collapses it.
+
+### Copy Name / Copy Path
+
+Both commands apply to all actionable item types (`WorktreeItem`, `WorkspaceFileItem`, `FavoriteItem`).
+
+- `copyName` — copies the item's display name to clipboard:
+  - `WorktreeItem` → `worktreeInfo.name` (branch name)
+  - `WorkspaceFileItem` → `workspaceFileInfo.name` (filename)
+  - `FavoriteItem` → rendered label
+- `copyPath` — copies the filesystem path to clipboard:
+  - `WorktreeItem` → `worktreeInfo.path`
+  - `WorkspaceFileItem` → `workspaceFileInfo.path`
+  - `FavoriteItem` → `favoritePath`
 
 ### Prune
 

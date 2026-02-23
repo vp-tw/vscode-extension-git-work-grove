@@ -91,6 +91,16 @@
         "enablement": "gitWorkGrove.hasRepository"
       },
       {
+        "command": "gitWorkGrove.copyName",
+        "title": "Git WorkGrove: Copy Name",
+        "enablement": "gitWorkGrove.hasRepository"
+      },
+      {
+        "command": "gitWorkGrove.copyPath",
+        "title": "Git WorkGrove: Copy Path",
+        "enablement": "gitWorkGrove.hasRepository"
+      },
+      {
         "command": "gitWorkGrove.revealInOS",
         "title": "Git WorkGrove: Reveal in Finder",
         "enablement": "gitWorkGrove.hasRepository"
@@ -156,6 +166,16 @@
           "command": "gitWorkGrove.revealInOS",
           "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./",
           "group": "navigation@3"
+        },
+        {
+          "command": "gitWorkGrove.copyName",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./",
+          "group": "5_cutcopypaste@1"
+        },
+        {
+          "command": "gitWorkGrove.copyPath",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./",
+          "group": "5_cutcopypaste@2"
         },
         {
           "command": "gitWorkGrove.addFavorite",
