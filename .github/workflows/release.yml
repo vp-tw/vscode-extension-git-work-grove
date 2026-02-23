@@ -64,7 +64,7 @@ jobs:
           echo "Publishing to Open VSX..."
           pnpm release:ovsx
 
-          rm -f *.vsix
+          rm -f git-work-grove.vsix
 
           git tag "$TAG"
           git push origin "$TAG"
