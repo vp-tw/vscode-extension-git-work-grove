@@ -1,5 +1,15 @@
 # git-work-grove
 
+## 0.2.0
+
+### Minor Changes
+
+- d20394c: Add Copy Name and Copy Path context menu commands
+
+### Patch Changes
+
+- cad2599: Add Open VSX Registry publishing support
+
 ## 0.1.2
 
 ### Patch Changes
