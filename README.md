@@ -60,6 +60,8 @@ Right-click any item in the tree to access:
 | **Open in New Window** | Opens the worktree or workspace file in a new VS Code window |
 | **Open in Current Window** | Opens in the current VS Code window |
 | **Reveal in Finder** | Opens the item's location in your OS file manager |
+| **Copy Name** | Copy the item's display name to clipboard |
+| **Copy Path** | Copy the item's filesystem path to clipboard |
 
 Favorite-specific actions appear as inline buttons:
 
@@ -138,6 +140,8 @@ These commands appear when right-clicking items in the tree view:
 | Open in New Window | Open worktree or workspace file in a new VS Code window |
 | Open in Current Window | Open in the current VS Code window |
 | Reveal in Finder | Open the item's location in your OS file manager |
+| Copy Name | Copy the item's display name to clipboard |
+| Copy Path | Copy the item's filesystem path to clipboard |
 | Add Favorite | Pin this item to the Favorites section |
 | Remove Favorite | Unpin from Favorites |
 | Move Favorite Up / Down | Reorder within Favorites |

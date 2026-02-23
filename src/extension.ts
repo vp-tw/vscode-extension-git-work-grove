@@ -3,6 +3,7 @@ import * as path from "node:path";
 
 import * as vscode from "vscode";
 
+import { copyName, copyPath } from "./commands/copyInfo.js";
 import { moveFavoriteDown, moveFavoriteUp } from "./commands/moveFavorite.js";
 import { openDefault, openInCurrentWindow, openInNewWindow } from "./commands/openWorkspace.js";
 import { pruneWorktrees } from "./commands/pruneWorktrees.js";
@@ -10,6 +11,8 @@ import { toggleFavorite } from "./commands/toggleFavorite.js";
 import {
   CMD_ADD_FAVORITE,
   CMD_CLEAN_STALE_FAVORITES,
+  CMD_COPY_NAME,
+  CMD_COPY_PATH,
   CMD_MOVE_FAVORITE_DOWN,
   CMD_MOVE_FAVORITE_UP,
   CMD_OPEN_IN_CURRENT_WINDOW,
@@ -28,6 +31,7 @@ import { FavoritesService } from "./services/favoritesService.js";
 import { GitWorktreeService } from "./services/gitWorktreeService.js";
 import { WorkspaceScanner } from "./services/workspaceScanner.js";
 import { getOutputChannel, log, logError } from "./utils/outputChannel.js";
+import { resolveItemPath } from "./utils/resolveItemPath.js";
 import { CurrentDecorationProvider } from "./views/currentDecorationProvider.js";
 import { WorktreeTreeProvider } from "./views/worktreeTreeProvider.js";
 
@@ -88,14 +92,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       moveFavoriteUp(item, favorites, treeProvider)),
     vscode.commands.registerCommand(CMD_MOVE_FAVORITE_DOWN, (item) =>
       moveFavoriteDown(item, favorites, treeProvider)),
+    vscode.commands.registerCommand(CMD_COPY_NAME, (item) =>
+      copyName(item)),
+    vscode.commands.registerCommand(CMD_COPY_PATH, (item) =>
+      copyPath(item)),
     vscode.commands.registerCommand(CMD_REVEAL_IN_OS, (item) => {
-      const fsPath = item && "favoritePath" in item
-        ? item.favoritePath
-        : item && "workspaceFileInfo" in item
-          ? item.workspaceFileInfo.path
-          : item && "worktreeInfo" in item
-            ? item.worktreeInfo.path
-            : undefined;
+      const fsPath = item ? resolveItemPath(item) : undefined;
       if (fsPath) {
         void vscode.commands.executeCommand("revealFileInOS", vscode.Uri.file(fsPath));
       }
