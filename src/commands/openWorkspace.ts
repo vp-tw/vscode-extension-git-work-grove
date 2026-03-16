@@ -55,7 +55,7 @@ async function openWithBehavior(item: OpenableItem, uri: vscode.Uri, behavior: O
       break;
     default: {
       const _: never = behavior;
-      break;
+      throw new Error(`Unhandled openBehavior: ${behavior}`);
     }
   }
 }
