@@ -124,3 +124,18 @@ export function getFavoriteWorktreeWorkspaceLabel(): string {
 export function getFavoriteWorktreeWorkspaceDescription(): string {
   return get("git-work-grove.template.favoriteWorktreeWorkspace.description", "🌲 {worktree}");
 }
+
+// --- Terminal name getters (4 templates — favorites reuse non-favorite) ---
+
+export function getRepositoryTerminalName(): string {
+  return get("git-work-grove.template.repository.terminalName", "{ref}");
+}
+export function getWorktreeTerminalName(): string {
+  return get("git-work-grove.template.worktree.terminalName", "{ref}");
+}
+export function getRepositoryWorkspaceTerminalName(): string {
+  return get("git-work-grove.template.repositoryWorkspace.terminalName", "{name}");
+}
+export function getWorktreeWorkspaceTerminalName(): string {
+  return get("git-work-grove.template.worktreeWorkspace.terminalName", "{name} ({ref})");
+}

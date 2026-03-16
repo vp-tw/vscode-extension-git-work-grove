@@ -101,6 +101,12 @@
         "enablement": "gitWorkGrove.hasRepository"
       },
       {
+        "command": "gitWorkGrove.openInTerminal",
+        "title": "Git WorkGrove: Open in Terminal",
+        "icon": "$(terminal)",
+        "enablement": "gitWorkGrove.hasRepository"
+      },
+      {
         "command": "gitWorkGrove.revealInOS",
         "title": "Git WorkGrove: Reveal in Finder",
         "enablement": "gitWorkGrove.hasRepository"
@@ -168,6 +174,11 @@
           "group": "navigation@3"
         },
         {
+          "command": "gitWorkGrove.openInTerminal",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./",
+          "group": "navigation@4"
+        },
+        {
           "command": "gitWorkGrove.copyName",
           "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./",
           "group": "5_cutcopypaste@1"
@@ -176,6 +187,11 @@
           "command": "gitWorkGrove.copyPath",
           "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./",
           "group": "5_cutcopypaste@2"
+        },
+        {
+          "command": "gitWorkGrove.openInTerminal",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository/ && !(viewItem =~ /favorite/)",
+          "group": "inline"
         },
         {
           "command": "gitWorkGrove.addFavorite",
@@ -207,7 +223,14 @@
           "enum": [
             "ask",
             "newWindow",
-            "currentWindow"
+            "currentWindow",
+            "terminal"
+          ],
+          "enumDescriptions": [
+            "Show a picker to choose how to open",
+            "Always open in a new window",
+            "Always open in the current window",
+            "Always open a terminal at the item location"
           ],
           "default": "ask",
           "description": "Default action when opening a workspace.",
@@ -245,6 +268,12 @@
           "markdownDescription": "Description template for the Repository header. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
           "scope": "resource"
         },
+        "git-work-grove.template.repository.terminalName": {
+          "type": "string",
+          "default": "{ref}",
+          "markdownDescription": "Terminal name template for Repository. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
         "git-work-grove.template.worktree.label": {
           "type": "string",
           "default": "{name}",
@@ -255,6 +284,12 @@
           "type": "string",
           "default": "",
           "markdownDescription": "Description template for linked worktrees. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.worktree.terminalName": {
+          "type": "string",
+          "default": "{ref}",
+          "markdownDescription": "Terminal name template for linked worktrees. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
           "scope": "resource"
         },
         "git-work-grove.template.repositoryWorkspace.label": {
@@ -269,6 +304,12 @@
           "markdownDescription": "Description template for workspace files under Repository. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
           "scope": "resource"
         },
+        "git-work-grove.template.repositoryWorkspace.terminalName": {
+          "type": "string",
+          "default": "{name}",
+          "markdownDescription": "Terminal name template for workspace files under Repository. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`, `{worktree}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
         "git-work-grove.template.worktreeWorkspace.label": {
           "type": "string",
           "default": "{name}",
@@ -279,6 +320,12 @@
           "type": "string",
           "default": "",
           "markdownDescription": "Description template for workspace files under linked worktrees. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`, `{worktree}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
+          "scope": "resource"
+        },
+        "git-work-grove.template.worktreeWorkspace.terminalName": {
+          "type": "string",
+          "default": "{name} ({ref})",
+          "markdownDescription": "Terminal name template for workspace files under linked worktrees. Variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`, `{worktree}`. Supports `{key|fallback}` and `{?key}...{/key}` syntax.",
           "scope": "resource"
         },
         "git-work-grove.template.favoriteRepository.label": {

@@ -9,6 +9,7 @@ export const CMD_ADD_FAVORITE = "gitWorkGrove.addFavorite";
 export const CMD_REMOVE_FAVORITE = "gitWorkGrove.removeFavorite";
 export const CMD_MOVE_FAVORITE_UP = "gitWorkGrove.moveFavoriteUp";
 export const CMD_MOVE_FAVORITE_DOWN = "gitWorkGrove.moveFavoriteDown";
+export const CMD_OPEN_IN_TERMINAL = "gitWorkGrove.openInTerminal";
 export const CMD_COPY_NAME = "gitWorkGrove.copyName";
 export const CMD_COPY_PATH = "gitWorkGrove.copyPath";
 export const CMD_REVEAL_IN_OS = "gitWorkGrove.revealInOS";

@@ -7,6 +7,6 @@ export type ActionableItem = FavoriteItem | WorkspaceFileItem | WorktreeItem;
 export function resolveItemPath(item: ActionableItem): string | undefined {
   if ("favoritePath" in item) return item.favoritePath;
   if ("workspaceFileInfo" in item) return item.workspaceFileInfo.path;
-  if ("worktreeInfo" in item) return item.worktreeInfo.path;
+  if ("worktreeInfo" in item && item.worktreeInfo) return item.worktreeInfo.path;
   return undefined;
 }

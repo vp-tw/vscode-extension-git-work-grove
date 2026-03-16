@@ -104,6 +104,10 @@ Note: "Has children" means at least one workspace file exists in the worktree di
 
 Green color: `new vscode.ThemeColor("terminal.ansiGreen")`
 
+## Inline Buttons
+
+Non-favorite items show two inline buttons: `$(terminal)` (Open in Terminal) and `$(star-empty)` (Add Favorite). Favorite items show three inline buttons: `$(star-full)` (Remove Favorite), `$(chevron-up)` (Move Up), `$(chevron-down)` (Move Down). See [commands.md](commands.md) for full menu placement details.
+
 ## Tooltips
 
 All items use a unified tooltip format via `buildTooltip()` (`src/utils/tooltip.ts`). Fields shown in order:

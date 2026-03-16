@@ -2,12 +2,14 @@ import type { OpenBehavior } from "../types.js";
 import type { FavoriteItem } from "../views/favoriteItem.js";
 import type { WorkspaceFileItem } from "../views/workspaceFileItem.js";
 import type { WorktreeItem } from "../views/worktreeItem.js";
+import type { GroupHeaderItem } from "../views/worktreeTreeProvider.js";
 
 import * as vscode from "vscode";
 
 import { getOpenBehavior, updateOpenBehavior } from "../utils/config.js";
+import { openInTerminal } from "./openTerminal.js";
 
-type OpenableItem = FavoriteItem | WorkspaceFileItem | WorktreeItem;
+type OpenableItem = FavoriteItem | GroupHeaderItem | WorkspaceFileItem | WorktreeItem;
 
 function openFolder(uri: vscode.Uri, forceNewWindow: boolean): Thenable<unknown> {
   return vscode.commands.executeCommand("vscode.openFolder", uri, {
@@ -15,13 +17,15 @@ function openFolder(uri: vscode.Uri, forceNewWindow: boolean): Thenable<unknown>
   });
 }
 
-async function askAndOpen(uri: vscode.Uri): Promise<void> {
+async function askAndOpen(item: OpenableItem, uri: vscode.Uri): Promise<void> {
   const pick = await vscode.window.showQuickPick(
     [
       { label: "Open in New Window", behavior: "newWindow" as const, persist: false },
       { label: "Open in Current Window", behavior: "currentWindow" as const, persist: false },
+      { label: "Open in Terminal", behavior: "terminal" as const, persist: false },
       { label: "Always Open in New Window", behavior: "newWindow" as const, persist: true },
       { label: "Always Open in Current Window", behavior: "currentWindow" as const, persist: true },
+      { label: "Always Open in Terminal", behavior: "terminal" as const, persist: true },
     ],
     { placeHolder: "How would you like to open this workspace?" },
   );
@@ -32,14 +36,27 @@ async function askAndOpen(uri: vscode.Uri): Promise<void> {
     await updateOpenBehavior(pick.behavior);
   }
 
-  await openFolder(uri, pick.behavior === "newWindow");
+  await openWithBehavior(item, uri, pick.behavior);
 }
 
-async function openWithBehavior(uri: vscode.Uri, behavior: OpenBehavior): Promise<void> {
-  if (behavior === "ask") {
-    await askAndOpen(uri);
-  } else {
-    await openFolder(uri, behavior === "newWindow");
+async function openWithBehavior(item: OpenableItem, uri: vscode.Uri, behavior: OpenBehavior): Promise<void> {
+  switch (behavior) {
+    case "ask":
+      await askAndOpen(item, uri);
+      break;
+    case "terminal":
+      openInTerminal(item);
+      break;
+    case "newWindow":
+      await openFolder(uri, true);
+      break;
+    case "currentWindow":
+      await openFolder(uri, false);
+      break;
+    default: {
+      const _: never = behavior;
+      throw new Error(`Unhandled openBehavior: ${behavior}`);
+    }
   }
 }
 
@@ -54,7 +71,7 @@ function resolveUri(item: OpenableItem | undefined): vscode.Uri | undefined {
     return vscode.Uri.file(item.workspaceFileInfo.path);
   }
 
-  if ("worktreeInfo" in item) {
+  if ("worktreeInfo" in item && item.worktreeInfo) {
     return vscode.Uri.file(item.worktreeInfo.path);
   }
 
@@ -74,7 +91,8 @@ export async function openInCurrentWindow(item: OpenableItem | undefined): Promi
 }
 
 export async function openDefault(item: OpenableItem | undefined): Promise<void> {
+  if (!item) return;
   const uri = resolveUri(item);
   if (!uri) return;
-  await openWithBehavior(uri, getOpenBehavior());
+  await openWithBehavior(item, uri, getOpenBehavior());
 }

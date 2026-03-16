@@ -36,6 +36,7 @@ If VS Code or GitLens ever ships proper `.code-workspace` support for worktrees,
 - **Favorites** — Pin any item (repository, worktree, workspace file) to the top with drag-and-drop reordering
 - **Current indicator** — Green icon and badge highlight the currently open item
 - **Customizable templates** — Full control over labels and descriptions for all 8 item types
+- **Open in Terminal** — Right-click to open a terminal at any worktree or workspace file location
 - **Prune** — Clean up stale worktree records
 - **Live updates** — FileSystemWatcher detects worktree changes automatically
 
@@ -59,6 +60,7 @@ Right-click any item in the tree to access:
 |--------|-------------|
 | **Open in New Window** | Opens the worktree or workspace file in a new VS Code window |
 | **Open in Current Window** | Opens in the current VS Code window |
+| **Open in Terminal** | Opens a terminal at the item's location |
 | **Reveal in Finder** | Opens the item's location in your OS file manager |
 | **Copy Name** | Copy the item's display name to clipboard |
 | **Copy Path** | Copy the item's filesystem path to clipboard |
@@ -67,6 +69,7 @@ Favorite-specific actions appear as inline buttons:
 
 | Button | Description |
 |--------|-------------|
+| **Open in Terminal** (terminal icon) | Open a terminal at this item's location (non-favorites only) |
 | **Add Favorite** (star outline) | Pin this item to the Favorites section |
 | **Remove Favorite** (filled star) | Unpin from Favorites |
 | **Move Up / Move Down** (chevrons) | Reorder within Favorites |
@@ -87,9 +90,10 @@ The WORKGROVE panel header provides:
 
 When you click a workspace file, the behavior depends on the `openBehavior` setting:
 
-- **`ask`** (default) — Shows a picker with options: _Open in New Window_, _Open in Current Window_, plus "Always" variants that persist your choice
+- **`ask`** (default) — Shows a picker with options: _Open in New Window_, _Open in Current Window_, _Open in Terminal_, plus "Always" variants that persist your choice
 - **`newWindow`** — Always opens in a new window
 - **`currentWindow`** — Always opens in the current window
+- **`terminal`** — Always opens a terminal at the item's location
 
 ### Current Indicator
 
@@ -106,10 +110,10 @@ Open VS Code Settings (`Cmd+,` / `Ctrl+,`) and search for `git-work-grove`:
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `git-work-grove.openBehavior` | `ask` \| `newWindow` \| `currentWindow` | `ask` | Default action when opening a workspace |
+| `git-work-grove.openBehavior` | `ask` \| `newWindow` \| `currentWindow` \| `terminal` | `ask` | Default action when opening a workspace |
 | `git-work-grove.workspaceFile.include` | `string[]` | `["*.code-workspace"]` | Glob patterns for workspace file scanning |
 | `git-work-grove.workspaceFile.exclude` | `string[]` | `[]` | Glob patterns to exclude from scanning |
-| `git-work-grove.template.*` | `string` | *(varies)* | Display templates — see [Template Customization](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/templates.md) |
+| `git-work-grove.template.*` | `string` | *(varies)* | Display templates (label, description, terminalName) — see [Template Customization](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/templates.md) |
 | `git-work-grove.favorites` | `string[]` | `[]` | Ordered list of favorited item paths (managed via the UI) |
 
 ### Template Customization
@@ -139,6 +143,7 @@ These commands appear when right-clicking items in the tree view:
 |---------|-------------|
 | Open in New Window | Open worktree or workspace file in a new VS Code window |
 | Open in Current Window | Open in the current VS Code window |
+| Open in Terminal | Open a terminal at the item's location |
 | Reveal in Finder | Open the item's location in your OS file manager |
 | Copy Name | Copy the item's display name to clipboard |
 | Copy Path | Copy the item's filesystem path to clipboard |
@@ -161,6 +166,7 @@ Design documents for contributors and AI-assisted development:
 - [Commands](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/spec/commands.md) — All commands, menu placement, behaviors
 - [Workspace Scanning](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/spec/workspace-scanning.md) — File discovery, include/exclude patterns
 - [Open Behavior](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/spec/open-behavior.md) — Open modes, URI resolution, click handling
+- [Open in Terminal](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/spec/open-in-terminal.md) — CWD resolution, terminal naming, prunable guard
 - [Empty States](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/spec/empty-states.md) — Git unavailable, no repository, no worktrees messages
 
 ## Installation

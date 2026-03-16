@@ -1,4 +1,4 @@
-import type { ResolvedFavorite } from "../types.js";
+import type { ResolvedFavorite, WorktreeInfo } from "../types.js";
 
 import * as vscode from "vscode";
 
@@ -100,11 +100,17 @@ function buildFavoriteTooltip(resolved: ResolvedFavorite): vscode.MarkdownString
 export class FavoriteItem extends vscode.TreeItem {
   readonly favoritePath: string;
   readonly favoriteIndex: number;
+  readonly favoriteType: "repo" | "worktree" | "workspaceFile";
+  readonly worktreeInfo?: WorktreeInfo;
+  readonly parentWorktreeInfo?: WorktreeInfo;
 
   constructor(resolved: ResolvedFavorite, index: number) {
     super(buildLabel(resolved), vscode.TreeItemCollapsibleState.None);
     this.favoritePath = resolved.path;
     this.favoriteIndex = index;
+    this.favoriteType = resolved.type;
+    this.worktreeInfo = resolved.worktreeInfo;
+    this.parentWorktreeInfo = resolved.parentWorktreeInfo;
     this.iconPath = getIcon(resolved);
     this.contextValue = buildContextValue(resolved);
     this.tooltip = buildFavoriteTooltip(resolved);
