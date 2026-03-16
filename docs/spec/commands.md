@@ -15,6 +15,7 @@ All commands use the `gitWorkGrove.*` prefix.
 | `moveFavoriteDown` | Move Favorite Down | `$(chevron-down)` | `gitWorkGrove.hasRepository` |
 | `copyName` | Copy Name | — | `gitWorkGrove.hasRepository` |
 | `copyPath` | Copy Path | — | `gitWorkGrove.hasRepository` |
+| `openInTerminal` | Open in Terminal | `$(terminal)` | `gitWorkGrove.hasRepository` |
 | `revealInOS` | Reveal in Finder | — | `gitWorkGrove.hasRepository` |
 | `refresh` | Refresh | `$(refresh)` | `gitWorkGrove.hasRepository` |
 | `showOutput` | Show Output | — | *(always)* |
@@ -37,8 +38,10 @@ All commands use the `gitWorkGrove.*` prefix.
 | `openInNewWindow` | `navigation@1` | `viewItem =~ /^worktree\|^workspaceFile\|^repository\|^favorite\./` |
 | `openInCurrentWindow` | `navigation@2` | *(same)* |
 | `revealInOS` | `navigation@3` | *(same)* |
+| `openInTerminal` | `navigation@4` | *(same)* |
 | `copyName` | `5_cutcopypaste@1` | *(same)* |
 | `copyPath` | `5_cutcopypaste@2` | *(same)* |
+| `openInTerminal` | `inline` | `viewItem =~ /^worktree\|^workspaceFile\|^repository/` AND NOT `viewItem =~ /favorite/` |
 | `addFavorite` | `inline` | `viewItem =~ /^worktree\|^workspaceFile\|^repository/` AND NOT `viewItem =~ /favorite/` |
 | `removeFavorite` | `inline` | `viewItem =~ /favorite/` |
 | `moveFavoriteUp` | `inline` | `viewItem =~ /^favorite\./` |
@@ -56,16 +59,30 @@ All open commands resolve a URI from the tree item:
 
 `openInNewWindow` always opens in a new window. `openInCurrentWindow` always opens in the current window.
 
+### Open in Terminal
+
+Opens a new VS Code terminal at the item's location. See [Open in Terminal spec](open-in-terminal.md) for full details.
+
+- `WorktreeItem` / `GroupHeaderItem` (repository) → cwd is `worktreeInfo.path`
+- `WorkspaceFileItem` → cwd is `dirname(workspaceFileInfo.path)`
+- `FavoriteItem` → resolved via duck-typing (same detection order as `resolveUri`)
+
+Terminal name is rendered from `template.*.terminalName` settings (4 templates — favorites reuse non-favorite templates).
+
+Prunable worktree guard: checks `fs.existsSync(cwd)` before creating the terminal. Shows a warning if the directory is missing.
+
 ### Default Open (click)
 
 Handled by `treeView.onDidChangeSelection`, not a registered command. Triggers on:
 
 - `FavoriteItem` click (when not current)
 - `WorkspaceFileItem` click (when not current)
+- `WorktreeItem` click (leaf only — `CollapsibleState.None`, i.e., no workspace files)
+- `GroupHeaderItem` (repository) click (leaf only — `CollapsibleState.None`, i.e., no workspace files)
 
-Uses `openBehavior` setting: `"ask"` shows a QuickPick, `"newWindow"` / `"currentWindow"` opens directly. The QuickPick includes "Always" options that persist the choice.
+Uses `openBehavior` setting: `"ask"` shows a QuickPick, `"newWindow"` / `"currentWindow"` / `"terminal"` opens directly. The QuickPick includes "Always" options that persist the choice.
 
-WorktreeItem clicks are NOT handled — clicking a worktree expands/collapses it.
+WorktreeItem and GroupHeaderItem (repository) clicks with children expand/collapse only (no open).
 
 ### Copy Name / Copy Path
 

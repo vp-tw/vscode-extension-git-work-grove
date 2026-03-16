@@ -17,7 +17,7 @@ Based on the 4 fundamental cases (repository, worktree, repositoryWorkspace, wor
 | 7 | Favorite Repo Workspace | `template.favoriteRepositoryWorkspace` | Favorited workspace file from repository |
 | 8 | Favorite Worktree Workspace | `template.favoriteWorktreeWorkspace` | Favorited workspace file from linked worktree |
 
-Each type has `.label` and `.description` settings (16 settings total).
+Each type has `.label` and `.description` settings (16 settings total). Additionally, the 4 non-favorite types have a `.terminalName` setting (4 settings, 20 total). Favorite types reuse the corresponding non-favorite `terminalName` template.
 
 ## Template Rendering
 
@@ -109,6 +109,10 @@ Built by `workspaceFileVars(name, filePath, parent)` where `parent.isMain === fa
 | `template.favoriteRepositoryWorkspace.description` | *(empty)* |
 | `template.favoriteWorktreeWorkspace.label` | `{name}` |
 | `template.favoriteWorktreeWorkspace.description` | `🌲 {worktree}` |
+| `template.repository.terminalName` | `Repository` |
+| `template.worktree.terminalName` | `{name}` |
+| `template.repositoryWorkspace.terminalName` | `{name}` |
+| `template.worktreeWorkspace.terminalName` | `{name}` |
 
 Design rationale: Only `favoriteWorktreeWorkspace.description` has a non-empty default because it's the only type that needs disambiguation — a workspace file shortcut in the Favorites section has no visible parent to indicate which worktree it belongs to.
 
@@ -133,6 +137,16 @@ else                         → favoriteWorktreeWorkspace.label / .description
 ```
 
 For `type === "repo"` / `"worktree"`: Uses the corresponding `favoriteRepository.*` / `favoriteWorktree.*` templates directly.
+
+### Terminal Name (all types)
+
+Terminal name templates use the non-favorite variant only. Favorites resolve to their underlying type:
+
+```
+FavoriteItem (type === "repo")          → repository.terminalName
+FavoriteItem (type === "worktree")      → worktree.terminalName
+FavoriteItem (type === "workspaceFile") → repositoryWorkspace.terminalName or worktreeWorkspace.terminalName (based on parent.isMain)
+```
 
 ### Repository header (GroupHeaderItem)
 

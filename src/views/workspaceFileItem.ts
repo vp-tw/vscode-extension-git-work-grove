@@ -15,6 +15,7 @@ import { buildResourceUri } from "./currentDecorationProvider.js";
 
 export class WorkspaceFileItem extends vscode.TreeItem {
   readonly workspaceFileInfo: WorkspaceFileInfo;
+  readonly parentWorktreeInfo: WorktreeInfo;
 
   constructor(info: WorkspaceFileInfo, isCurrent: boolean, isFavorite: boolean, parent: WorktreeInfo) {
     const vars = workspaceFileVars(info.name, info.path, parent);
@@ -22,6 +23,7 @@ export class WorkspaceFileItem extends vscode.TreeItem {
     const descTemplate = parent.isMain ? getRepositoryWorkspaceDescription() : getWorktreeWorkspaceDescription();
     super(renderTemplate(labelTemplate, vars), vscode.TreeItemCollapsibleState.None);
     this.workspaceFileInfo = info;
+    this.parentWorktreeInfo = parent;
 
     const parts = ["workspaceFile"];
     if (isCurrent) parts.push("current");

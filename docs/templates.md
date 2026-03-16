@@ -17,7 +17,7 @@ Based on the 4 fundamental cases (repository, worktree, repositoryWorkspace, wor
 | 7 | `template.favoriteRepositoryWorkspace` | Favorited workspace file from Repository |
 | 8 | `template.favoriteWorktreeWorkspace` | Favorited workspace file from linked worktree |
 
-Each has `.label` and `.description`. Set to empty string to hide.
+Each has `.label` and `.description`. Set to empty string to hide. The 4 non-favorite types also have a `.terminalName` setting for the Open in Terminal command. Favorites reuse the corresponding non-favorite `terminalName` template.
 
 ## Settings
 
@@ -39,6 +39,10 @@ Each has `.label` and `.description`. Set to empty string to hide.
 | `template.favoriteRepositoryWorkspace.description` | *(empty)* |
 | `template.favoriteWorktreeWorkspace.label` | `{name}` |
 | `template.favoriteWorktreeWorkspace.description` | `🌲 {worktree}` |
+| `template.repository.terminalName` | `Repository` |
+| `template.worktree.terminalName` | `{name}` |
+| `template.repositoryWorkspace.terminalName` | `{name}` |
+| `template.worktreeWorkspace.terminalName` | `{name}` |
 
 ## Variables
 

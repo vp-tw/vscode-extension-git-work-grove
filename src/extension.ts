@@ -5,6 +5,7 @@ import * as vscode from "vscode";
 
 import { copyName, copyPath } from "./commands/copyInfo.js";
 import { moveFavoriteDown, moveFavoriteUp } from "./commands/moveFavorite.js";
+import { openInTerminal } from "./commands/openTerminal.js";
 import { openDefault, openInCurrentWindow, openInNewWindow } from "./commands/openWorkspace.js";
 import { pruneWorktrees } from "./commands/pruneWorktrees.js";
 import { toggleFavorite } from "./commands/toggleFavorite.js";
@@ -17,6 +18,7 @@ import {
   CMD_MOVE_FAVORITE_UP,
   CMD_OPEN_IN_CURRENT_WINDOW,
   CMD_OPEN_IN_NEW_WINDOW,
+  CMD_OPEN_IN_TERMINAL,
   CMD_PRUNE_WORKTREES,
   CMD_REFRESH,
   CMD_REMOVE_FAVORITE,
@@ -84,6 +86,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       openInNewWindow(item)),
     vscode.commands.registerCommand(CMD_OPEN_IN_CURRENT_WINDOW, (item) =>
       openInCurrentWindow(item)),
+    vscode.commands.registerCommand(CMD_OPEN_IN_TERMINAL, (item) =>
+      openInTerminal(item)),
     vscode.commands.registerCommand(CMD_ADD_FAVORITE, (item) =>
       toggleFavorite(item, favorites, treeProvider)),
     vscode.commands.registerCommand(CMD_REMOVE_FAVORITE, (item) =>
@@ -137,6 +141,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
       // Handle WorkspaceFileItem clicks (existing behavior)
       if ("workspaceFileInfo" in item) {
+        if (typeof item.contextValue === "string" && item.contextValue.includes("current")) return;
+        openDefault(item);
+        return;
+      }
+
+      // Handle leaf WorktreeItem / GroupHeaderItem (repository) — no workspace files
+      if ("worktreeInfo" in item && item.worktreeInfo) {
+        if (item.collapsibleState !== vscode.TreeItemCollapsibleState.None) return;
         if (typeof item.contextValue === "string" && item.contextValue.includes("current")) return;
         openDefault(item);
       }
