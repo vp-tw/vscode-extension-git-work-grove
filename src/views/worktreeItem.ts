@@ -60,7 +60,6 @@ export class WorktreeItem extends vscode.TreeItem {
       type: info.isMain ? "Repository" : "Worktree",
       path: info.path,
       worktreeInfo: info,
-      isPrunable: info.isPrunable,
     });
     this.iconPath = getIcon(info, displayCurrent);
     this.resourceUri = buildResourceUri(info.path, displayCurrent);

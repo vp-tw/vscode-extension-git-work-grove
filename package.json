@@ -91,6 +91,11 @@
         "enablement": "gitWorkGrove.hasRepository"
       },
       {
+        "command": "gitWorkGrove.copyMissingPath",
+        "title": "Git WorkGrove: Copy Path (Missing)",
+        "enablement": "gitWorkGrove.hasRepository"
+      },
+      {
         "command": "gitWorkGrove.copyName",
         "title": "Git WorkGrove: Copy Name",
         "enablement": "gitWorkGrove.hasRepository"
@@ -98,6 +103,11 @@
       {
         "command": "gitWorkGrove.copyPath",
         "title": "Git WorkGrove: Copy Path",
+        "enablement": "gitWorkGrove.hasRepository"
+      },
+      {
+        "command": "gitWorkGrove.copyWorktreeConfigPath",
+        "title": "Git WorkGrove: Copy Worktree Config Path",
         "enablement": "gitWorkGrove.hasRepository"
       },
       {
@@ -160,22 +170,22 @@
       "view/item/context": [
         {
           "command": "gitWorkGrove.openInNewWindow",
-          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./ && !(viewItem =~ /prunable/)",
           "group": "navigation@1"
         },
         {
           "command": "gitWorkGrove.openInCurrentWindow",
-          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./ && !(viewItem =~ /prunable/)",
           "group": "navigation@2"
         },
         {
           "command": "gitWorkGrove.revealInOS",
-          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./ && !(viewItem =~ /prunable/)",
           "group": "navigation@3"
         },
         {
           "command": "gitWorkGrove.openInTerminal",
-          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./ && !(viewItem =~ /prunable/)",
           "group": "navigation@4"
         },
         {
@@ -185,17 +195,27 @@
         },
         {
           "command": "gitWorkGrove.copyPath",
-          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository|^favorite\\./ && !(viewItem =~ /prunable/)",
           "group": "5_cutcopypaste@2"
         },
         {
+          "command": "gitWorkGrove.copyMissingPath",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /prunable/",
+          "group": "5_cutcopypaste@2"
+        },
+        {
+          "command": "gitWorkGrove.copyWorktreeConfigPath",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /prunable/",
+          "group": "5_cutcopypaste@3"
+        },
+        {
           "command": "gitWorkGrove.openInTerminal",
-          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository/ && !(viewItem =~ /favorite/)",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository/ && !(viewItem =~ /favorite/) && !(viewItem =~ /prunable/)",
           "group": "inline"
         },
         {
           "command": "gitWorkGrove.addFavorite",
-          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository/ && !(viewItem =~ /favorite/)",
+          "when": "view == gitWorkGrove.worktrees && viewItem =~ /^worktree|^workspaceFile|^repository/ && !(viewItem =~ /favorite/) && !(viewItem =~ /prunable/)",
           "group": "inline"
         },
         {

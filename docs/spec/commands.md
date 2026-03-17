@@ -13,8 +13,10 @@ All commands use the `gitWorkGrove.*` prefix.
 | `removeFavorite` | Remove Favorite | `$(star-full)` | `gitWorkGrove.hasRepository` |
 | `moveFavoriteUp` | Move Favorite Up | `$(chevron-up)` | `gitWorkGrove.hasRepository` |
 | `moveFavoriteDown` | Move Favorite Down | `$(chevron-down)` | `gitWorkGrove.hasRepository` |
+| `copyMissingPath` | Copy Path (Missing) | — | `gitWorkGrove.hasRepository` |
 | `copyName` | Copy Name | — | `gitWorkGrove.hasRepository` |
 | `copyPath` | Copy Path | — | `gitWorkGrove.hasRepository` |
+| `copyWorktreeConfigPath` | Copy Worktree Config Path | — | `gitWorkGrove.hasRepository` |
 | `openInTerminal` | Open in Terminal | `$(terminal)` | `gitWorkGrove.hasRepository` |
 | `revealInOS` | Reveal in Finder | — | `gitWorkGrove.hasRepository` |
 | `refresh` | Refresh | `$(refresh)` | `gitWorkGrove.hasRepository` |
@@ -35,14 +37,16 @@ All commands use the `gitWorkGrove.*` prefix.
 
 | Command | Group | When clause |
 |---|---|---|
-| `openInNewWindow` | `navigation@1` | `viewItem =~ /^worktree\|^workspaceFile\|^repository\|^favorite\./` |
+| `openInNewWindow` | `navigation@1` | `viewItem =~ /^worktree\|^workspaceFile\|^repository\|^favorite\./` AND NOT `viewItem =~ /prunable/` |
 | `openInCurrentWindow` | `navigation@2` | *(same)* |
 | `revealInOS` | `navigation@3` | *(same)* |
 | `openInTerminal` | `navigation@4` | *(same)* |
-| `copyName` | `5_cutcopypaste@1` | *(same)* |
-| `copyPath` | `5_cutcopypaste@2` | *(same)* |
-| `openInTerminal` | `inline` | `viewItem =~ /^worktree\|^workspaceFile\|^repository/` AND NOT `viewItem =~ /favorite/` |
-| `addFavorite` | `inline` | `viewItem =~ /^worktree\|^workspaceFile\|^repository/` AND NOT `viewItem =~ /favorite/` |
+| `copyName` | `5_cutcopypaste@1` | `viewItem =~ /^worktree\|^workspaceFile\|^repository\|^favorite\./` |
+| `copyPath` | `5_cutcopypaste@2` | *(same as copyName)* AND NOT `viewItem =~ /prunable/` |
+| `copyMissingPath` | `5_cutcopypaste@2` | `viewItem =~ /prunable/` |
+| `copyWorktreeConfigPath` | `5_cutcopypaste@3` | `viewItem =~ /prunable/` |
+| `openInTerminal` | `inline` | `viewItem =~ /^worktree\|^workspaceFile\|^repository/` AND NOT `viewItem =~ /favorite/` AND NOT `viewItem =~ /prunable/` |
+| `addFavorite` | `inline` | `viewItem =~ /^worktree\|^workspaceFile\|^repository/` AND NOT `viewItem =~ /favorite/` AND NOT `viewItem =~ /prunable/` |
 | `removeFavorite` | `inline` | `viewItem =~ /favorite/` |
 | `moveFavoriteUp` | `inline` | `viewItem =~ /^favorite\./` |
 | `moveFavoriteDown` | `inline` | `viewItem =~ /^favorite\./` |
@@ -96,6 +100,23 @@ Both commands apply to all actionable item types (`WorktreeItem`, `WorkspaceFile
   - `WorktreeItem` → `worktreeInfo.path`
   - `WorkspaceFileItem` → `workspaceFileInfo.path`
   - `FavoriteItem` → `favoritePath`
+
+### Copy Path (Missing) / Copy Worktree Config Path
+
+Prunable-only commands — shown when `viewItem =~ /prunable/`.
+
+- `copyMissingPath` — same behavior as `copyPath` (reuses handler), but displayed with title "Copy Path (Missing)" to clarify the path no longer exists on disk
+- `copyWorktreeConfigPath` — copies `worktreeInfo.configPath` (absolute path to git-internal worktree config directory, e.g., `/repo/.git/worktrees/wt-hotfix`). Shows a warning if `configPath` is not available (e.g., main worktree).
+
+### Prunable Menu Behavior
+
+Prunable worktrees (directory deleted without `git worktree remove`) have a restricted context menu:
+
+**Hidden for prunable:** `openInNewWindow`, `openInCurrentWindow`, `revealInOS`, `openInTerminal`, `addFavorite`, `copyPath`
+
+**Visible for prunable:** `copyName`, `copyMissingPath`, `copyWorktreeConfigPath`
+
+This applies to both `WorktreeItem` and `FavoriteItem` via the `prunable` segment in `contextValue`.
 
 ### Prune
 

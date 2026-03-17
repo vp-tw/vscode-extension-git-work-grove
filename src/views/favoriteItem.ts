@@ -18,7 +18,17 @@ import {
 import { buildTooltip } from "../utils/tooltip.js";
 import { buildResourceUri } from "./currentDecorationProvider.js";
 
+function isPrunable(resolved: ResolvedFavorite): boolean {
+  return resolved.worktreeInfo?.isPrunable
+    ?? resolved.parentWorktreeInfo?.isPrunable
+    ?? false;
+}
+
 function getIcon(resolved: ResolvedFavorite): vscode.ThemeIcon {
+  if (isPrunable(resolved)) {
+    return new vscode.ThemeIcon("warning");
+  }
+
   const color = resolved.isCurrent
     ? new vscode.ThemeColor("terminal.ansiGreen")
     : undefined;
@@ -36,6 +46,7 @@ function getIcon(resolved: ResolvedFavorite): vscode.ThemeIcon {
 function buildContextValue(resolved: ResolvedFavorite): string {
   const parts = ["favorite", resolved.type];
   if (resolved.isCurrent) parts.push("current");
+  if (isPrunable(resolved)) parts.push("prunable");
   return parts.join(".");
 }
 
