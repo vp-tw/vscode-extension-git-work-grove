@@ -2,7 +2,7 @@
   "name": "git-work-grove",
   "displayName": "Git WorkGrove",
   "description": "A code-workspace friendly worktree explorer for VS Code",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "publisher": "vdustr",
   "license": "MIT",
   "icon": "icon.png",
@@ -454,7 +454,10 @@
               },
               "mode": {
                 "type": "string",
-                "enum": ["spawn", "terminal"],
+                "enum": [
+                  "spawn",
+                  "terminal"
+                ],
                 "default": "spawn",
                 "description": "Execution mode. \"spawn\" runs detached in background (default). \"terminal\" runs in VS Code integrated terminal."
               }
@@ -493,7 +496,10 @@
               },
               "mode": {
                 "type": "string",
-                "enum": ["spawn", "terminal"],
+                "enum": [
+                  "spawn",
+                  "terminal"
+                ],
                 "default": "spawn",
                 "description": "Execution mode. \"spawn\" runs detached in background (default). \"terminal\" runs in VS Code integrated terminal."
               }
