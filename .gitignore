@@ -165,6 +165,9 @@ vite.config.ts.timestamp-*
 # VS Code extension packaging output
 *.vsix
 
+# Git worktrees (isolated workspaces)
+.worktrees/
+
 # ============================================
 # Overrides (highest priority - last wins)
 # ============================================
