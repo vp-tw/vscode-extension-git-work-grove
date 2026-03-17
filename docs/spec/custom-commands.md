@@ -29,11 +29,11 @@ Same variables as repository/worktree templates:
 
 | Variable | Value |
 |---|---|
-| `{name}` | Branch name, or `HEAD` if detached |
-| `{branch}` | Full branch name (empty if detached HEAD) |
-| `{ref}` | Branch name or short commit hash (always non-empty) |
+| `{name}` | Worktree folder name |
+| `{branch}` | Git branch (empty if detached HEAD) |
+| `{ref}` | Branch or short commit hash (always non-empty) |
 | `{head}` | Short commit hash (8 chars) |
-| `{path}` | Absolute worktree directory path |
+| `{path}` | Filesystem path |
 
 ### Workspace items (`customCommands.workspace`)
 
@@ -41,12 +41,12 @@ Same variables as worktree workspace templates, plus `{dir}`:
 
 | Variable | Value |
 |---|---|
-| `{name}` | File name (without `.code-workspace` extension) |
+| `{name}` | File name (without `.code-workspace`) |
 | `{branch}` | Parent worktree branch (empty if detached HEAD) |
-| `{ref}` | Branch name or short commit hash (always non-empty) |
+| `{ref}` | Branch or short commit hash (always non-empty) |
 | `{head}` | Short commit hash (8 chars) |
-| `{path}` | Absolute workspace file path |
-| `{dir}` | Absolute parent directory of workspace file |
+| `{path}` | Workspace file path |
+| `{dir}` | Parent directory of workspace file path |
 | `{worktree}` | Parent worktree folder name |
 
 Template syntax (fallback, conditional) is the same as display templates. See [templates.md](../../docs/templates.md) for syntax reference.
@@ -107,7 +107,7 @@ Same logic as Open in Terminal (see [open-in-terminal.md](open-in-terminal.md)):
 
 - **Spawn failure** (synchronous): try/catch around `spawn()` — shows error via `showErrorMessage`
 - **Process error** (asynchronous): `child.on("error")` — shows error with "Show Logs" action
-- **Settings validation**: Invalid entries are skipped with a log message. Checks: `label` must be a non-empty string, `command` must be a non-empty string array, and `env` values (if present) must all be strings
+- **Settings validation**: Invalid entries (missing `label`, empty `command`) are skipped with a log message
 - **Template rendering**: Uses the same `renderTemplate` function as display templates — unknown variables remain as-is
 
 ## Examples
@@ -170,20 +170,6 @@ Common terminal emulators:
     {
       "command": ["open", "-a", "Terminal", "{dir}"],
       "label": "Open dir in Terminal.app"
-    }
-  ]
-}
-```
-
-### Using environment variables
-
-```json
-{
-  "git-work-grove.customCommands.directory": [
-    {
-      "command": ["open", "-a", "Ghostty", "--args", "--working-directory={path}"],
-      "env": { "GHOSTTY_TITLE": "{ref}" },
-      "label": "Open in Ghostty"
     }
   ]
 }
