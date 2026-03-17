@@ -2,7 +2,7 @@
   "name": "git-work-grove",
   "displayName": "Git WorkGrove",
   "description": "A code-workspace friendly worktree explorer for VS Code",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "publisher": "vdustr",
   "license": "MIT",
   "icon": "icon.png",
@@ -429,7 +429,10 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["label", "command"],
+            "required": [
+              "label",
+              "command"
+            ],
             "properties": {
               "label": {
                 "type": "string",
@@ -437,12 +440,16 @@
               },
               "command": {
                 "type": "array",
-                "items": { "type": "string" },
+                "items": {
+                  "type": "string"
+                },
                 "description": "Command to execute as [bin, ...args]. Supports template variables: {name}, {branch}, {ref}, {head}, {path}."
               },
               "env": {
                 "type": "object",
-                "additionalProperties": { "type": "string" },
+                "additionalProperties": {
+                  "type": "string"
+                },
                 "description": "Environment variables. Values support template variables."
               }
             }
@@ -455,7 +462,10 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["label", "command"],
+            "required": [
+              "label",
+              "command"
+            ],
             "properties": {
               "label": {
                 "type": "string",
@@ -463,12 +473,16 @@
               },
               "command": {
                 "type": "array",
-                "items": { "type": "string" },
+                "items": {
+                  "type": "string"
+                },
                 "description": "Command to execute as [bin, ...args]. Supports template variables: {name}, {branch}, {ref}, {head}, {path}, {dir}, {worktree}."
               },
               "env": {
                 "type": "object",
-                "additionalProperties": { "type": "string" },
+                "additionalProperties": {
+                  "type": "string"
+                },
                 "description": "Environment variables. Values support template variables."
               }
             }
