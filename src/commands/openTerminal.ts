@@ -1,4 +1,4 @@
-import type { TreeActionableItem } from "../utils/resolveItemContext.js";
+import type { ItemContext, TreeActionableItem } from "../utils/resolveItemContext.js";
 
 import * as fs from "node:fs";
 
@@ -14,7 +14,7 @@ import {
   renderTemplate,
 } from "../utils/template.js";
 
-function resolveTerminalName(item: TreeActionableItem, ctx: ReturnType<typeof resolveItemContext> & {}): string {
+function resolveTerminalName(item: TreeActionableItem, ctx: ItemContext): string {
   // FavoriteItem
   if ("favoritePath" in item) {
     switch (item.favoriteType) {
