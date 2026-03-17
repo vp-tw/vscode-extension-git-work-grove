@@ -20,6 +20,7 @@ Each entry in the array:
 | `label` | `string` | Yes | Display text in context menu and QuickPick |
 | `command` | `string[]` | Yes | Command as `[bin, ...args]` — supports template variables |
 | `env` | `Record<string, string>` | No | Environment variables — values support template variables |
+| `mode` | `"spawn" \| "terminal"` | No | Execution mode — `"spawn"` (default): detached background process. `"terminal"`: VS Code integrated terminal |
 
 ## Template Variables
 
@@ -81,7 +82,7 @@ The menu items are only visible when the corresponding setting array is non-empt
 3. A QuickPick appears listing all configured commands for that item type
 4. Each QuickPick item shows the `label` and the rendered command as detail
 5. User selects a command
-6. The command is spawned detached in the background
+6. The command is executed based on the entry's `mode`: spawned detached (`"spawn"`) or run in an integrated terminal (`"terminal"`)
 
 ## Execution
 
@@ -92,6 +93,20 @@ The menu items are only visible when the corresponding setting array is non-empt
 - **macOS GUI apps**: Use `open -a <AppName> --args ...` instead of calling the binary directly — `detached: true` creates a new process group that prevents direct GUI binaries from connecting to WindowServer
 - **Command not found**: On macOS, VS Code launched from Finder has a limited PATH. Use full binary paths or `open -a` for GUI apps.
 - **Logging**: Spawned command is logged to the output channel
+
+## Terminal Mode
+
+When `mode` is `"terminal"`, the command runs in a VS Code integrated terminal instead of a detached background process.
+
+- **Terminal name**: Uses the entry's `label`
+- **Command**: `sendText(quote([bin, ...args]))` — shell-quoted via the `shell-quote` library
+- **Environment**: Only custom `env` is passed (VS Code merges with its inherited environment automatically)
+- **Lifecycle**: The terminal remains open after the command finishes — the user can interact or close it manually
+- **Error handling**: try/catch around `createTerminal` + `sendText` — shows error via `showErrorMessage` and logs via `logError`
+
+### Known Limitation
+
+`shell-quote` produces POSIX-style quoting which may not work correctly in PowerShell terminals (on any platform). Users whose VS Code terminal profile uses PowerShell should prefer `"mode": "spawn"` for commands with arguments containing spaces or special characters.
 
 ## CWD Resolution
 
@@ -184,6 +199,34 @@ Common terminal emulators:
       "command": ["open", "-a", "Ghostty", "--args", "--working-directory={path}"],
       "env": { "GHOSTTY_TITLE": "{ref}" },
       "label": "Open in Ghostty"
+    }
+  ]
+}
+```
+
+### Run an interactive CLI tool in terminal
+
+```json
+{
+  "git-work-grove.customCommands.directory": [
+    {
+      "command": ["npm", "run", "dev"],
+      "label": "Run Dev Server",
+      "mode": "terminal"
+    }
+  ]
+}
+```
+
+### Start Claude Code in a worktree
+
+```json
+{
+  "git-work-grove.customCommands.directory": [
+    {
+      "command": ["claude"],
+      "label": "Claude Code",
+      "mode": "terminal"
     }
   ]
 }

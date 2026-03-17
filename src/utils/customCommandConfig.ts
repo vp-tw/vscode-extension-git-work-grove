@@ -18,6 +18,8 @@ export function validateCustomCommand(entry: unknown): entry is CustomCommandCon
     if (!Object.values(obj.env).every((v: unknown) => typeof v === "string")) return false;
   }
 
+  if (obj.mode !== undefined && obj.mode !== "spawn" && obj.mode !== "terminal") return false;
+
   return true;
 }
 
@@ -28,7 +30,7 @@ export function getCustomCommands(type: "directory" | "workspace"): Array<Custom
 
   for (const entry of raw) {
     if (validateCustomCommand(entry)) {
-      valid.push({ ...entry, env: entry.env ?? {} });
+      valid.push({ ...entry, env: entry.env ?? {}, mode: entry.mode ?? "spawn" });
     } else {
       log(`Invalid custom command entry in ${key}: ${JSON.stringify(entry)}`);
     }

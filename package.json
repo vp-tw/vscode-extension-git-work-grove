@@ -451,6 +451,12 @@
                   "type": "string"
                 },
                 "description": "Environment variables. Values support template variables."
+              },
+              "mode": {
+                "type": "string",
+                "enum": ["spawn", "terminal"],
+                "default": "spawn",
+                "description": "Execution mode. \"spawn\" runs detached in background (default). \"terminal\" runs in VS Code integrated terminal."
               }
             }
           },
@@ -484,6 +490,12 @@
                   "type": "string"
                 },
                 "description": "Environment variables. Values support template variables."
+              },
+              "mode": {
+                "type": "string",
+                "enum": ["spawn", "terminal"],
+                "default": "spawn",
+                "description": "Execution mode. \"spawn\" runs detached in background (default). \"terminal\" runs in VS Code integrated terminal."
               }
             }
           },
@@ -523,6 +535,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^7.4.3",
     "@changesets/cli": "^2.29.8",
+    "@types/shell-quote": "^1.7.5",
     "@types/vscode": "^1.95.0",
     "@vp-tw/eslint-config": "latest",
     "@vp-tw/tsconfig": "latest",
@@ -534,5 +547,8 @@
     "ovsx": "^0.10.9",
     "typescript": "latest",
     "vitest": "latest"
+  },
+  "dependencies": {
+    "shell-quote": "^1.8.3"
   }
 }
