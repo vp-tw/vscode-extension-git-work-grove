@@ -3,7 +3,7 @@ import * as path from "node:path";
 
 import * as vscode from "vscode";
 
-import { copyName, copyPath } from "./commands/copyInfo.js";
+import { copyName, copyPath, copyWorktreeConfigPath } from "./commands/copyInfo.js";
 import { moveFavoriteDown, moveFavoriteUp } from "./commands/moveFavorite.js";
 import { openInTerminal } from "./commands/openTerminal.js";
 import { openDefault, openInCurrentWindow, openInNewWindow } from "./commands/openWorkspace.js";
@@ -12,8 +12,10 @@ import { toggleFavorite } from "./commands/toggleFavorite.js";
 import {
   CMD_ADD_FAVORITE,
   CMD_CLEAN_STALE_FAVORITES,
+  CMD_COPY_MISSING_PATH,
   CMD_COPY_NAME,
   CMD_COPY_PATH,
+  CMD_COPY_WORKTREE_CONFIG_PATH,
   CMD_MOVE_FAVORITE_DOWN,
   CMD_MOVE_FAVORITE_UP,
   CMD_OPEN_IN_CURRENT_WINDOW,
@@ -96,10 +98,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       moveFavoriteUp(item, favorites, treeProvider)),
     vscode.commands.registerCommand(CMD_MOVE_FAVORITE_DOWN, (item) =>
       moveFavoriteDown(item, favorites, treeProvider)),
+    vscode.commands.registerCommand(CMD_COPY_MISSING_PATH, (item) =>
+      copyPath(item)),
     vscode.commands.registerCommand(CMD_COPY_NAME, (item) =>
       copyName(item)),
     vscode.commands.registerCommand(CMD_COPY_PATH, (item) =>
       copyPath(item)),
+    vscode.commands.registerCommand(CMD_COPY_WORKTREE_CONFIG_PATH, (item) =>
+      copyWorktreeConfigPath(item)),
     vscode.commands.registerCommand(CMD_REVEAL_IN_OS, (item) => {
       const fsPath = item ? resolveItemPath(item) : undefined;
       if (fsPath) {

@@ -7,6 +7,7 @@ export interface WorktreeInfo {
   isCurrent: boolean;
   isMain: boolean;
   isPrunable: boolean;
+  configPath?: string;
 }
 
 export interface WorkspaceFileInfo {

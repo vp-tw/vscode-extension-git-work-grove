@@ -164,17 +164,20 @@ export class GitWorktreeService {
     }
   }
 
-  private async resolveWorktreeNames(): Promise<Map<string, string>> {
+  private async resolveWorktreeNames(): Promise<{
+    nameMap: Map<string, string>;
+    commonDir: string | undefined;
+  }> {
     const nameMap = new Map<string, string>();
     const commonDir = await this.getCommonDir();
-    if (!commonDir) return nameMap;
+    if (!commonDir) return { nameMap, commonDir };
 
     const worktreesDir = path.join(commonDir, "worktrees");
     let entries: Array<fs.Dirent>;
     try {
       entries = fs.readdirSync(worktreesDir, { withFileTypes: true });
     } catch {
-      return nameMap;
+      return { nameMap, commonDir };
     }
 
     for (const entry of entries) {
@@ -187,14 +190,18 @@ export class GitWorktreeService {
           : path.resolve(path.dirname(gitdirFile), content);
         // gitdir points to <worktree>/.git, so parent is the worktree path
         const worktreePath = path.dirname(resolved);
-        const normalized = fs.realpathSync(worktreePath);
-        nameMap.set(normalized, entry.name);
+        try {
+          const normalized = fs.realpathSync(worktreePath);
+          nameMap.set(normalized, entry.name);
+        } catch {
+          nameMap.set(path.normalize(worktreePath), entry.name);
+        }
       } catch {
-        // Missing or unresolvable gitdir — skip
+        // readFileSync failed — skip entry
       }
     }
 
-    return nameMap;
+    return { nameMap, commonDir };
   }
 
   async list(forceRefresh = false): Promise<Array<WorktreeInfo>> {
@@ -216,7 +223,7 @@ export class GitWorktreeService {
         TIMEOUT_GIT_SHORT,
       );
       const parsed = parseWorktreeListPorcelain(output);
-      const [currentPath, nameMap] = await Promise.all([
+      const [currentPath, { nameMap, commonDir }] = await Promise.all([
         this.getCurrentWorktreePath(),
         this.resolveWorktreeNames(),
       ]);
@@ -233,9 +240,12 @@ export class GitWorktreeService {
           }
         }
         const isPrunable = entry.isPrunable || (!isCurrent && !fs.existsSync(entry.path));
-        const name = (normalizedPath ? nameMap.get(normalizedPath) : undefined)
-          ?? path.basename(entry.path);
-        return { ...entry, name, isCurrent, isMain: index === 0, isPrunable };
+        const configName = (normalizedPath ? nameMap.get(normalizedPath) : undefined)
+          ?? nameMap.get(path.normalize(entry.path));
+        const name = configName ?? path.basename(entry.path);
+        const configPath = commonDir && configName
+          ? path.join(commonDir, "worktrees", configName) : undefined;
+        return { ...entry, name, isCurrent, isMain: index === 0, isPrunable, configPath };
       });
 
       this.cache = { entries, timestamp: Date.now() };

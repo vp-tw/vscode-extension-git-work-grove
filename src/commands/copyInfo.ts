@@ -26,3 +26,11 @@ export async function copyPath(item: ActionableItem | undefined): Promise<void> 
     await vscode.env.clipboard.writeText(path);
   }
 }
+
+export async function copyWorktreeConfigPath(item: ActionableItem | undefined): Promise<void> {
+  if (!item || !("worktreeInfo" in item) || !item.worktreeInfo?.configPath) {
+    void vscode.window.showWarningMessage("Worktree config path not available.");
+    return;
+  }
+  await vscode.env.clipboard.writeText(item.worktreeInfo.configPath);
+}
