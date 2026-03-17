@@ -1,5 +1,11 @@
 # git-work-grove
 
+## 0.6.0
+
+### Minor Changes
+
+- 8575241: Add terminal execution mode for custom commands
+
 ## 0.5.1
 
 ### Patch Changes
