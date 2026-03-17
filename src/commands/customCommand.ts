@@ -1,7 +1,8 @@
 import type { CustomCommandConfig } from "../types.js";
+import type { TreeActionableItem } from "../utils/resolveItemContext.js";
 
 import { spawn } from "node:child_process";
-import * as path from "node:path";
+import * as fs from "node:fs";
 import process from "node:process";
 
 import * as vscode from "vscode";
@@ -9,44 +10,8 @@ import * as vscode from "vscode";
 import { CMD_SHOW_OUTPUT } from "../constants.js";
 import { getCustomCommands } from "../utils/customCommandConfig.js";
 import { log, logError } from "../utils/outputChannel.js";
-import { renderTemplate, workspaceFileVars, worktreeVars } from "../utils/template.js";
-
-// Duck-typed item type matching openTerminal.ts pattern
-type CustomCommandItem =
-  | { favoritePath: string; favoriteType: "repo" | "worktree" | "workspaceFile"; parentWorktreeInfo?: { branch: string | undefined; head: string; isCurrent: boolean; isDetached: boolean; isMain: boolean; isPrunable: boolean; name: string; path: string }; worktreeInfo?: { branch: string | undefined; head: string; isCurrent: boolean; isDetached: boolean; isMain: boolean; isPrunable: boolean; name: string; path: string } }
-  | { parentWorktreeInfo: { branch: string | undefined; head: string; isCurrent: boolean; isDetached: boolean; isMain: boolean; isPrunable: boolean; name: string; path: string }; workspaceFileInfo: { name: string; path: string } }
-  | { worktreeInfo: { branch: string | undefined; head: string; isCurrent: boolean; isDetached: boolean; isMain: boolean; isPrunable: boolean; name: string; path: string } };
-
-function resolveVars(item: CustomCommandItem): { cwd: string; vars: Record<string, string> } | undefined {
-  // FavoriteItem
-  if ("favoritePath" in item) {
-    switch (item.favoriteType) {
-      case "repo":
-      case "worktree": {
-        const info = item.worktreeInfo!;
-        return { cwd: item.favoritePath, vars: worktreeVars(info) };
-      }
-      case "workspaceFile": {
-        const wsName = path.basename(item.favoritePath, ".code-workspace");
-        const vars = workspaceFileVars(wsName, item.favoritePath, item.parentWorktreeInfo);
-        return { cwd: path.dirname(item.favoritePath), vars };
-      }
-    }
-  }
-
-  // WorkspaceFileItem
-  if ("workspaceFileInfo" in item) {
-    const vars = workspaceFileVars(item.workspaceFileInfo.name, item.workspaceFileInfo.path, item.parentWorktreeInfo);
-    return { cwd: path.dirname(item.workspaceFileInfo.path), vars };
-  }
-
-  // WorktreeItem / GroupHeaderItem (repository)
-  if ("worktreeInfo" in item && item.worktreeInfo) {
-    return { cwd: item.worktreeInfo.path, vars: worktreeVars(item.worktreeInfo) };
-  }
-
-  return undefined;
-}
+import { resolveItemContext } from "../utils/resolveItemContext.js";
+import { renderTemplate } from "../utils/template.js";
 
 function renderCommand(config: CustomCommandConfig, vars: Record<string, string>): { args: Array<string>; bin: string; env: Record<string, string> } {
   const rendered = config.command.map(part => renderTemplate(part, vars));
@@ -86,13 +51,20 @@ function spawnCommand(bin: string, args: Array<string>, env: Record<string, stri
 }
 
 export async function runCustomCommand(
-  item: CustomCommandItem | undefined,
+  item: TreeActionableItem | undefined,
   type: "directory" | "workspace",
 ): Promise<void> {
   if (!item) return;
 
-  const resolved = resolveVars(item);
+  const resolved = resolveItemContext(item);
   if (!resolved) return;
+
+  if (!fs.existsSync(resolved.cwd)) {
+    void vscode.window.showErrorMessage(
+      `Cannot run custom command: directory does not exist — ${resolved.cwd}`,
+    );
+    return;
+  }
 
   const commands = getCustomCommands(type);
   if (commands.length === 0) return;
@@ -100,9 +72,9 @@ export async function runCustomCommand(
   const quickPickItems = commands.map((cmd) => {
     const rendered = renderCommand(cmd, resolved.vars);
     return {
-      command: cmd,
-      detail: `${rendered.bin} ${rendered.args.join(" ")}`,
+      ...rendered,
       label: cmd.label,
+      detail: `${rendered.bin} ${rendered.args.join(" ")}`,
     };
   });
 
@@ -112,6 +84,5 @@ export async function runCustomCommand(
 
   if (!selected) return;
 
-  const { args, bin, env } = renderCommand(selected.command, resolved.vars);
-  spawnCommand(bin, args, env, resolved.cwd);
+  spawnCommand(selected.bin, selected.args, selected.env, resolved.cwd);
 }

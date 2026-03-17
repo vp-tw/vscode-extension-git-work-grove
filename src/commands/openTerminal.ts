@@ -1,47 +1,32 @@
+import type { ItemContext, TreeActionableItem } from "../utils/resolveItemContext.js";
+
 import * as fs from "node:fs";
-import * as path from "node:path";
 
 import * as vscode from "vscode";
 
 import { logError } from "../utils/outputChannel.js";
+import { resolveItemContext } from "../utils/resolveItemContext.js";
 import {
   getRepositoryTerminalName,
   getRepositoryWorkspaceTerminalName,
   getWorktreeTerminalName,
   getWorktreeWorkspaceTerminalName,
   renderTemplate,
-  workspaceFileVars,
-  worktreeVars,
 } from "../utils/template.js";
 
-type TerminalOpenableItem =
-  | { favoritePath: string; favoriteType: "repo" | "worktree" | "workspaceFile"; worktreeInfo?: { isMain: boolean; name: string; path: string; head: string; branch: string | undefined; isDetached: boolean; isCurrent: boolean; isPrunable: boolean }; parentWorktreeInfo?: { isMain: boolean; name: string; path: string; head: string; branch: string | undefined; isDetached: boolean; isCurrent: boolean; isPrunable: boolean } }
-  | { workspaceFileInfo: { name: string; path: string }; parentWorktreeInfo: { isMain: boolean; name: string; path: string; head: string; branch: string | undefined; isDetached: boolean; isCurrent: boolean; isPrunable: boolean } }
-  | { worktreeInfo: { isMain: boolean; name: string; path: string; head: string; branch: string | undefined; isDetached: boolean; isCurrent: boolean; isPrunable: boolean } };
-
-function resolve(item: TerminalOpenableItem): { cwd: string; name: string } | undefined {
+function resolveTerminalName(item: TreeActionableItem, ctx: ItemContext): string {
   // FavoriteItem
   if ("favoritePath" in item) {
     switch (item.favoriteType) {
-      case "repo": {
-        const info = item.worktreeInfo!;
-        const name = renderTemplate(getRepositoryTerminalName(), worktreeVars(info));
-        return { cwd: item.favoritePath, name };
-      }
-      case "worktree": {
-        const info = item.worktreeInfo!;
-        const name = renderTemplate(getWorktreeTerminalName(), worktreeVars(info));
-        return { cwd: item.favoritePath, name };
-      }
+      case "repo":
+        return renderTemplate(getRepositoryTerminalName(), ctx.vars);
+      case "worktree":
+        return renderTemplate(getWorktreeTerminalName(), ctx.vars);
       case "workspaceFile": {
-        const wsName = path.basename(item.favoritePath, ".code-workspace");
-        const parent = item.parentWorktreeInfo;
-        const template = parent?.isMain
+        const template = ctx.parentWorktreeInfo?.isMain
           ? getRepositoryWorkspaceTerminalName()
           : getWorktreeWorkspaceTerminalName();
-        const vars = workspaceFileVars(wsName, item.favoritePath, parent);
-        const name = renderTemplate(template, vars);
-        return { cwd: path.dirname(item.favoritePath), name };
+        return renderTemplate(template, ctx.vars);
       }
     }
   }
@@ -52,39 +37,37 @@ function resolve(item: TerminalOpenableItem): { cwd: string; name: string } | un
     const template = parent.isMain
       ? getRepositoryWorkspaceTerminalName()
       : getWorktreeWorkspaceTerminalName();
-    const vars = workspaceFileVars(item.workspaceFileInfo.name, item.workspaceFileInfo.path, parent);
-    const name = renderTemplate(template, vars);
-    return { cwd: path.dirname(item.workspaceFileInfo.path), name };
+    return renderTemplate(template, ctx.vars);
   }
 
   // WorktreeItem / GroupHeaderItem (repository)
   if ("worktreeInfo" in item && item.worktreeInfo) {
-    const info = item.worktreeInfo;
-    const template = info.isMain ? getRepositoryTerminalName() : getWorktreeTerminalName();
-    const name = renderTemplate(template, worktreeVars(info));
-    return { cwd: info.path, name };
+    const template = item.worktreeInfo.isMain ? getRepositoryTerminalName() : getWorktreeTerminalName();
+    return renderTemplate(template, ctx.vars);
   }
 
-  return undefined;
+  return "";
 }
 
-export function openInTerminal(item: TerminalOpenableItem | undefined): void {
+export function openInTerminal(item: TreeActionableItem | undefined): void {
   if (!item) return;
 
-  const resolved = resolve(item);
-  if (!resolved) return;
+  const ctx = resolveItemContext(item);
+  if (!ctx) return;
 
-  if (!fs.existsSync(resolved.cwd)) {
+  if (!fs.existsSync(ctx.cwd)) {
     void vscode.window.showErrorMessage(
-      `Cannot open terminal: directory does not exist — ${resolved.cwd}`,
+      `Cannot open terminal: directory does not exist — ${ctx.cwd}`,
     );
     return;
   }
 
+  const name = resolveTerminalName(item, ctx);
+
   try {
     const terminal = vscode.window.createTerminal({
-      name: resolved.name,
-      cwd: resolved.cwd,
+      name,
+      cwd: ctx.cwd,
     });
     terminal.show();
   } catch (error) {
