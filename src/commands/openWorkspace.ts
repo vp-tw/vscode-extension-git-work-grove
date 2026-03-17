@@ -7,7 +7,7 @@ import type { GroupHeaderItem } from "../views/worktreeTreeProvider.js";
 import * as vscode from "vscode";
 
 import { getOpenBehavior, updateOpenBehavior } from "../utils/config.js";
-import { openInTerminal } from "./openTerminal.js";
+import { openInExternalTerminal, openInTerminal } from "./openTerminal.js";
 
 type OpenableItem = FavoriteItem | GroupHeaderItem | WorkspaceFileItem | WorktreeItem;
 
@@ -23,9 +23,11 @@ async function askAndOpen(item: OpenableItem, uri: vscode.Uri): Promise<void> {
       { label: "Open in New Window", behavior: "newWindow" as const, persist: false },
       { label: "Open in Current Window", behavior: "currentWindow" as const, persist: false },
       { label: "Open in Terminal", behavior: "terminal" as const, persist: false },
+      { label: "Open in External Terminal", behavior: "externalTerminal" as const, persist: false },
       { label: "Always Open in New Window", behavior: "newWindow" as const, persist: true },
       { label: "Always Open in Current Window", behavior: "currentWindow" as const, persist: true },
       { label: "Always Open in Terminal", behavior: "terminal" as const, persist: true },
+      { label: "Always Open in External Terminal", behavior: "externalTerminal" as const, persist: true },
     ],
     { placeHolder: "How would you like to open this workspace?" },
   );
@@ -46,6 +48,9 @@ async function openWithBehavior(item: OpenableItem, uri: vscode.Uri, behavior: O
       break;
     case "terminal":
       openInTerminal(item);
+      break;
+    case "externalTerminal":
+      openInExternalTerminal(item);
       break;
     case "newWindow":
       await openFolder(uri, true);

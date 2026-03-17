@@ -24,4 +24,4 @@ export interface ResolvedFavorite {
   parentWorktreeInfo?: WorktreeInfo;
 }
 
-export type OpenBehavior = "ask" | "currentWindow" | "newWindow" | "terminal";
+export type OpenBehavior = "ask" | "currentWindow" | "externalTerminal" | "newWindow" | "terminal";

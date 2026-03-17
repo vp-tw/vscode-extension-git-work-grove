@@ -244,13 +244,15 @@
             "ask",
             "newWindow",
             "currentWindow",
-            "terminal"
+            "terminal",
+            "externalTerminal"
           ],
           "enumDescriptions": [
             "Show a picker to choose how to open",
             "Always open in a new window",
             "Always open in the current window",
-            "Always open a terminal at the item location"
+            "Always open a terminal at the item location",
+            "Always open an external terminal at the item location (uses terminal.external.osxExec / linuxExec / windowsExec)"
           ],
           "default": "ask",
           "description": "Default action when opening a workspace.",

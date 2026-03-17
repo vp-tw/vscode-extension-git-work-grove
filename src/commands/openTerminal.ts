@@ -1,3 +1,4 @@
+import * as cp from "node:child_process";
 import * as fs from "node:fs";
 import * as path from "node:path";
 
@@ -91,4 +92,60 @@ export function openInTerminal(item: TerminalOpenableItem | undefined): void {
     logError("Failed to create terminal", error);
     void vscode.window.showErrorMessage("Failed to create terminal.");
   }
+}
+
+function getExternalTerminalConfig(): string | undefined {
+  const config = vscode.workspace.getConfiguration("terminal.external");
+  switch (process.platform) {
+    case "darwin":
+      return config.get<string>("osxExec");
+    case "linux":
+      return config.get<string>("linuxExec");
+    case "win32":
+      return config.get<string>("windowsExec");
+    default:
+      return undefined;
+  }
+}
+
+export function openInExternalTerminal(item: TerminalOpenableItem | undefined): void {
+  if (!item) return;
+
+  const resolved = resolve(item);
+  if (!resolved) return;
+
+  if (!fs.existsSync(resolved.cwd)) {
+    void vscode.window.showErrorMessage(
+      `Cannot open terminal: directory does not exist — ${resolved.cwd}`,
+    );
+    return;
+  }
+
+  const terminalApp = getExternalTerminalConfig();
+  const env = { ...process.env };
+  // Remove Electron/VS Code internals from the spawned process
+  delete env.ELECTRON_RUN_AS_NODE;
+
+  let child: cp.ChildProcess;
+  if (process.platform === "darwin") {
+    const app = terminalApp || "Terminal.app";
+    child = cp.spawn("/usr/bin/open", ["-a", app, resolved.cwd], { env });
+  } else if (process.platform === "win32") {
+    const exec = terminalApp || "cmd.exe";
+    child = cp.spawn(exec, [], { cwd: resolved.cwd, env, detached: true, stdio: "ignore" });
+  } else {
+    const exec = terminalApp || "xterm";
+    child = cp.spawn(exec, [], { cwd: resolved.cwd, env, detached: true, stdio: "ignore" });
+  }
+
+  child.on("error", (error: NodeJS.ErrnoException) => {
+    logError("Failed to open external terminal", error);
+    if (error.code === "ENOENT") {
+      void vscode.window.showErrorMessage(
+        "Configured external terminal not found. Please check your \"terminal.external\" setting.",
+      );
+    } else {
+      void vscode.window.showErrorMessage("Failed to open external terminal.");
+    }
+  });
 }
