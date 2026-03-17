@@ -46,4 +46,20 @@ describe("validateCustomCommand", () => {
   it("returns false for non-object", () => {
     expect(validateCustomCommand("string")).toBe(false);
   });
+
+  it("returns false when env is not an object", () => {
+    expect(validateCustomCommand({ label: "Test", command: ["echo"], env: "bad" })).toBe(false);
+  });
+
+  it("returns false when env is an array", () => {
+    expect(validateCustomCommand({ label: "Test", command: ["echo"], env: ["bad"] })).toBe(false);
+  });
+
+  it("returns false when env values are not strings", () => {
+    expect(validateCustomCommand({ label: "Test", command: ["echo"], env: { FOO: 123 } })).toBe(false);
+  });
+
+  it("returns true when env is omitted", () => {
+    expect(validateCustomCommand({ label: "Test", command: ["echo"] })).toBe(true);
+  });
 });

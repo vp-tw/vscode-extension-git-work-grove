@@ -13,6 +13,11 @@ export function validateCustomCommand(entry: unknown): entry is CustomCommandCon
   if (!Array.isArray(obj.command) || obj.command.length === 0) return false;
   if (!obj.command.every((c: unknown) => typeof c === "string")) return false;
 
+  if (obj.env !== undefined) {
+    if (typeof obj.env !== "object" || obj.env === null || Array.isArray(obj.env)) return false;
+    if (!Object.values(obj.env).every((v: unknown) => typeof v === "string")) return false;
+  }
+
   return true;
 }
 
@@ -23,10 +28,7 @@ export function getCustomCommands(type: "directory" | "workspace"): Array<Custom
 
   for (const entry of raw) {
     if (validateCustomCommand(entry)) {
-      const env = (typeof entry.env === "object" && entry.env !== null && !Array.isArray(entry.env))
-        ? entry.env
-        : {};
-      valid.push({ ...entry, env });
+      valid.push({ ...entry, env: entry.env ?? {} });
     } else {
       log(`Invalid custom command entry in ${key}: ${JSON.stringify(entry)}`);
     }
