@@ -1,5 +1,6 @@
 import type { WorktreeInfo } from "../types.js";
 
+import * as path from "node:path";
 import * as vscode from "vscode";
 
 function get<T>(key: string, defaultValue: T): T {
@@ -55,6 +56,7 @@ export function workspaceFileVars(
     ref: parent?.branch ?? parent?.head.slice(0, 8) ?? "",
     head: parent?.head.slice(0, 8) ?? "",
     path: filePath,
+    dir: path.dirname(filePath),
     worktree: parent?.name ?? "",
   };
 }

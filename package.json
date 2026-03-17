@@ -137,6 +137,16 @@
         "enablement": "gitWorkGrove.hasRepository"
       },
       {
+        "command": "gitWorkGrove.customCommand.directory",
+        "title": "Git WorkGrove: Custom Commands...",
+        "enablement": "gitWorkGrove.hasRepository"
+      },
+      {
+        "command": "gitWorkGrove.customCommand.workspace",
+        "title": "Git WorkGrove: Custom Commands...",
+        "enablement": "gitWorkGrove.hasRepository"
+      },
+      {
         "command": "gitWorkGrove.moveFavoriteUp",
         "title": "Git WorkGrove: Move Favorite Up",
         "icon": "$(chevron-up)",
@@ -207,6 +217,16 @@
           "command": "gitWorkGrove.copyWorktreeConfigPath",
           "when": "view == gitWorkGrove.worktrees && viewItem =~ /prunable/",
           "group": "5_cutcopypaste@3"
+        },
+        {
+          "command": "gitWorkGrove.customCommand.directory",
+          "when": "view == gitWorkGrove.worktrees && gitWorkGrove.hasCustomCommands.directory && viewItem =~ /^worktree|^repository|^favorite\\./ && !(viewItem =~ /workspaceFile/) && !(viewItem =~ /prunable/)",
+          "group": "custom@1"
+        },
+        {
+          "command": "gitWorkGrove.customCommand.workspace",
+          "when": "view == gitWorkGrove.worktrees && gitWorkGrove.hasCustomCommands.workspace && viewItem =~ /^workspaceFile|^favorite\\.workspaceFile/",
+          "group": "custom@1"
         },
         {
           "command": "gitWorkGrove.openInTerminal",
@@ -404,6 +424,58 @@
           "default": [],
           "description": "Ordered list of favorited item paths.",
           "scope": "application"
+        },
+        "git-work-grove.customCommands.directory": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "command"],
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "Display text in the context menu and QuickPick."
+              },
+              "command": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Command to execute as [bin, ...args]. Supports template variables: {name}, {branch}, {ref}, {head}, {path}."
+              },
+              "env": {
+                "type": "object",
+                "additionalProperties": { "type": "string" },
+                "description": "Environment variables. Values support template variables."
+              }
+            }
+          },
+          "default": [],
+          "markdownDescription": "Custom commands for worktree/repository items. Each entry defines a command triggered from the context menu. Template variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`.",
+          "scope": "resource"
+        },
+        "git-work-grove.customCommands.workspace": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "command"],
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "Display text in the context menu and QuickPick."
+              },
+              "command": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Command to execute as [bin, ...args]. Supports template variables: {name}, {branch}, {ref}, {head}, {path}, {dir}, {worktree}."
+              },
+              "env": {
+                "type": "object",
+                "additionalProperties": { "type": "string" },
+                "description": "Environment variables. Values support template variables."
+              }
+            }
+          },
+          "default": [],
+          "markdownDescription": "Custom commands for workspace file items. Each entry defines a command triggered from the context menu. Template variables: `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`, `{dir}`, `{worktree}`.",
+          "scope": "resource"
         }
       }
     }

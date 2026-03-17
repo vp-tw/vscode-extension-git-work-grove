@@ -65,6 +65,7 @@ Each has `.label` and `.description`. Set to empty string to hide. The 4 non-fav
 | `{ref}` | Branch or short commit hash (always non-empty) | `main`, `abc12345` |
 | `{head}` | Short commit hash (8 chars) | `abc12345` |
 | `{path}` | Workspace file path | `/path/to/repo/stellar-app.code-workspace` |
+| `{dir}` | Parent directory of workspace file path | `/path/to/repo` |
 
 ### Worktree Workspace items (types 4, 8)
 
@@ -76,8 +77,9 @@ Each has `.label` and `.description`. Set to empty string to hide. The 4 non-fav
 | `{ref}` | Branch or short commit hash (always non-empty) | `feat/auth`, `abc12345` |
 | `{head}` | Short commit hash (8 chars) | `abc12345` |
 | `{path}` | Workspace file path | `/path/to/feat-auth/stellar-app.code-workspace` |
+| `{dir}` | Parent directory of workspace file path | `/path/to/feat-auth` |
 
-Note: `{worktree}` is only available for worktree workspace items (types 4, 8). Repository workspace items don't have a parent worktree.
+Note: `{worktree}` and `{dir}` are only available for workspace items. `{worktree}` is only non-empty for worktree workspace items (types 4, 8). `{dir}` is available for all workspace items (types 3, 4, 7, 8).
 
 ## Advanced Syntax
 
