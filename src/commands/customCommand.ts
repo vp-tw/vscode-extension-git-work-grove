@@ -56,7 +56,7 @@ function terminalCommand(label: string, bin: string, args: Array<string>, env: R
     const terminal = vscode.window.createTerminal({ cwd, env, name: label });
     terminal.sendText(quote([bin, ...args]));
     terminal.show();
-    log(`Custom command (terminal): ${bin} ${args.join(" ")}`);
+    log(`Custom command (terminal): ${quote([bin, ...args])}`);
   } catch (error) {
     logError(`Failed to run '${bin}' in terminal`, error);
     void vscode.window.showErrorMessage(`Failed to run '${bin}' in terminal.`);
