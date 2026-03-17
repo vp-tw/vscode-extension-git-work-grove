@@ -1,5 +1,12 @@
 # git-work-grove
 
+## 0.5.1
+
+### Patch Changes
+
+- ce5111c: Deduplicate item resolution logic between Open in Terminal and Custom Commands. Add missing CWD existence check for custom commands.
+- b0abda1: Improve custom commands spec: fix variable descriptions, clarify absolute paths, document env validation, add env usage example.
+
 ## 0.5.0
 
 ### Minor Changes
