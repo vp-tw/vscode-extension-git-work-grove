@@ -85,11 +85,12 @@ The menu items are only visible when the corresponding setting array is non-empt
 
 ## Execution
 
-- **Spawn**: `child_process.spawn(bin, args, { detached: true, shell: true, stdio: "ignore" })`
-- **Shell**: `shell: true` on all platforms — ensures commands resolve via the user's shell PATH
+- **Spawn**: `child_process.spawn(bin, args, { detached: true, stdio: "ignore" })`
+- **Shell**: `shell: true` on Windows only (`win32`) for `.cmd`/`.bat` support. POSIX uses direct exec (no shell) to avoid command injection via path metacharacters.
 - **Detached + unref**: Fire-and-forget — the child process outlives the extension
 - **Environment**: `process.env` merged with rendered `env` from the config entry (config values override)
 - **macOS GUI apps**: Use `open -a <AppName> --args ...` instead of calling the binary directly — `detached: true` creates a new process group that prevents direct GUI binaries from connecting to WindowServer
+- **Command not found**: On macOS, VS Code launched from Finder has a limited PATH. Use full binary paths or `open -a` for GUI apps.
 - **Logging**: Spawned command is logged to the output channel
 
 ## CWD Resolution

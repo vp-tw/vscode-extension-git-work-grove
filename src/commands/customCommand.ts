@@ -63,7 +63,7 @@ function spawnCommand(bin: string, args: Array<string>, env: Record<string, stri
       cwd,
       detached: true,
       env: { ...process.env, ...env },
-      shell: true,
+      shell: process.platform === "win32",
       stdio: "ignore",
     });
     child.unref();
