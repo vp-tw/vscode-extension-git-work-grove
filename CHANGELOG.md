@@ -1,5 +1,11 @@
 # git-work-grove
 
+## 0.5.0
+
+### Minor Changes
+
+- a6f7f9a: Add custom commands: configure external commands (e.g., open in Ghostty, Zed) triggered from the tree view context menu. Supports template variables for dynamic arguments and environment variables.
+
 ## 0.4.0
 
 ### Minor Changes
