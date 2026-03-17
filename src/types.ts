@@ -25,3 +25,9 @@ export interface ResolvedFavorite {
 }
 
 export type OpenBehavior = "ask" | "currentWindow" | "newWindow" | "terminal";
+
+export interface CustomCommandConfig {
+  label: string;
+  command: Array<string>;
+  env?: Record<string, string>;
+}

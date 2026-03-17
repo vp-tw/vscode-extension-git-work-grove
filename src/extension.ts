@@ -4,6 +4,7 @@ import * as path from "node:path";
 import * as vscode from "vscode";
 
 import { copyName, copyPath, copyWorktreeConfigPath } from "./commands/copyInfo.js";
+import { runCustomCommand } from "./commands/customCommand.js";
 import { moveFavoriteDown, moveFavoriteUp } from "./commands/moveFavorite.js";
 import { openInTerminal } from "./commands/openTerminal.js";
 import { openDefault, openInCurrentWindow, openInNewWindow } from "./commands/openWorkspace.js";
@@ -16,6 +17,8 @@ import {
   CMD_COPY_NAME,
   CMD_COPY_PATH,
   CMD_COPY_WORKTREE_CONFIG_PATH,
+  CMD_CUSTOM_COMMAND_DIRECTORY,
+  CMD_CUSTOM_COMMAND_WORKSPACE,
   CMD_MOVE_FAVORITE_DOWN,
   CMD_MOVE_FAVORITE_UP,
   CMD_OPEN_IN_CURRENT_WINDOW,
@@ -27,6 +30,8 @@ import {
   CMD_REVEAL_IN_OS,
   CMD_SHOW_OUTPUT,
   CTX_GIT_UNAVAILABLE,
+  CTX_HAS_CUSTOM_COMMANDS_DIRECTORY,
+  CTX_HAS_CUSTOM_COMMANDS_WORKSPACE,
   CTX_HAS_REPOSITORY,
   DEBOUNCE_WATCHER,
   VIEW_WORKTREES,
@@ -34,6 +39,7 @@ import {
 import { FavoritesService } from "./services/favoritesService.js";
 import { GitWorktreeService } from "./services/gitWorktreeService.js";
 import { WorkspaceScanner } from "./services/workspaceScanner.js";
+import { getCustomCommands } from "./utils/customCommandConfig.js";
 import { getOutputChannel, log, logError } from "./utils/outputChannel.js";
 import { resolveItemPath } from "./utils/resolveItemPath.js";
 import { CurrentDecorationProvider } from "./views/currentDecorationProvider.js";
@@ -41,6 +47,11 @@ import { WorktreeTreeProvider } from "./views/worktreeTreeProvider.js";
 
 function setContext(key: string, value: boolean): Thenable<unknown> {
   return vscode.commands.executeCommand("setContext", key, value);
+}
+
+function updateCustomCommandContextKeys(): void {
+  void setContext(CTX_HAS_CUSTOM_COMMANDS_DIRECTORY, getCustomCommands("directory").length > 0);
+  void setContext(CTX_HAS_CUSTOM_COMMANDS_WORKSPACE, getCustomCommands("workspace").length > 0);
 }
 
 async function checkGitAndRepository(
@@ -60,6 +71,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   // Set initial context keys synchronously
   void setContext(CTX_HAS_REPOSITORY, false);
   void setContext(CTX_GIT_UNAVAILABLE, false);
+  void setContext(CTX_HAS_CUSTOM_COMMANDS_DIRECTORY, false);
+  void setContext(CTX_HAS_CUSTOM_COMMANDS_WORKSPACE, false);
 
   // Services
   const gitService = new GitWorktreeService();
@@ -130,6 +143,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       }
       await favorites.cleanupStale(validPaths);
     }),
+    vscode.commands.registerCommand(CMD_CUSTOM_COMMAND_DIRECTORY, (item) =>
+      runCustomCommand(item, "directory")),
+    vscode.commands.registerCommand(CMD_CUSTOM_COMMAND_WORKSPACE, (item) =>
+      runCustomCommand(item, "workspace")),
   );
 
   // Tree item click → default open behavior
@@ -172,6 +189,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   }
 
   void setContext(CTX_HAS_REPOSITORY, hasRepository);
+  updateCustomCommandContextKeys();
 
   if (!hasRepository) {
     log("No git repository found in workspace folders");
@@ -206,6 +224,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     vscode.workspace.onDidChangeConfiguration((e) => {
       if (e.affectsConfiguration("git-work-grove")) {
         treeProvider.refresh();
+        updateCustomCommandContextKeys();
       }
     }),
   );

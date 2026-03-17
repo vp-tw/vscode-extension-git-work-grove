@@ -36,6 +36,7 @@ If VS Code or GitLens ever ships proper `.code-workspace` support for worktrees,
 - **Favorites** — Pin any item (repository, worktree, workspace file) to the top with drag-and-drop reordering
 - **Current indicator** — Green icon and badge highlight the currently open item
 - **Customizable templates** — Full control over labels and descriptions for all 8 item types
+- **Custom Commands** — Define your own context menu commands with template variable support
 - **Open in Terminal** — Right-click to open a terminal at any worktree or workspace file location
 - **Prune** — Clean up stale worktree records
 - **Live updates** — FileSystemWatcher detects worktree changes automatically
@@ -62,6 +63,7 @@ Right-click any item in the tree to access:
 | **Open in Current Window** | Opens in the current VS Code window |
 | **Open in Terminal** | Opens a terminal at the item's location |
 | **Reveal in Finder** | Opens the item's location in your OS file manager |
+| **Custom Commands...** | Runs a user-defined command (when configured) |
 | **Copy Name** | Copy the item's display name to clipboard |
 | **Copy Path** | Copy the item's filesystem path to clipboard |
 
@@ -113,8 +115,34 @@ Open VS Code Settings (`Cmd+,` / `Ctrl+,`) and search for `git-work-grove`:
 | `git-work-grove.openBehavior` | `ask` \| `newWindow` \| `currentWindow` \| `terminal` | `ask` | Default action when opening a workspace |
 | `git-work-grove.workspaceFile.include` | `string[]` | `["*.code-workspace"]` | Glob patterns for workspace file scanning |
 | `git-work-grove.workspaceFile.exclude` | `string[]` | `[]` | Glob patterns to exclude from scanning |
+| `git-work-grove.customCommands.directory` | `array` | `[]` | Custom commands for repository/worktree items |
+| `git-work-grove.customCommands.workspace` | `array` | `[]` | Custom commands for workspace file items |
 | `git-work-grove.template.*` | `string` | *(varies)* | Display templates (label, description, terminalName) — see [Template Customization](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/templates.md) |
 | `git-work-grove.favorites` | `string[]` | `[]` | Ordered list of favorited item paths (managed via the UI) |
+
+### Custom Commands
+
+Define custom commands that appear in the tree view context menu. Two settings are available — one for directory items (repository/worktree), one for workspace file items:
+
+```json
+{
+  "git-work-grove.customCommands.directory": [
+    {
+      "command": ["npm", "run", "dev"],
+      "env": { "NODE_ENV": "development" },
+      "label": "Run Dev Server"
+    }
+  ],
+  "git-work-grove.customCommands.workspace": [
+    {
+      "command": ["code", "--goto", "{path}"],
+      "label": "Open in Terminal"
+    }
+  ]
+}
+```
+
+Each entry has a `label` (shown in QuickPick), a `command` array (`[bin, ...args]`), and an optional `env` object. Both `command` and `env` values support template variables (`{name}`, `{branch}`, `{ref}`, `{head}`, `{path}` — workspace items also have `{dir}` and `{worktree}`).
 
 ### Template Customization
 
@@ -145,6 +173,7 @@ These commands appear when right-clicking items in the tree view:
 | Open in Current Window | Open in the current VS Code window |
 | Open in Terminal | Open a terminal at the item's location |
 | Reveal in Finder | Open the item's location in your OS file manager |
+| Custom Commands... | Run a user-defined command (when configured) |
 | Copy Name | Copy the item's display name to clipboard |
 | Copy Path | Copy the item's filesystem path to clipboard |
 | Add Favorite | Pin this item to the Favorites section |
@@ -168,6 +197,7 @@ Design documents for contributors and AI-assisted development:
 - [Open Behavior](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/spec/open-behavior.md) — Open modes, URI resolution, click handling
 - [Open in Terminal](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/spec/open-in-terminal.md) — CWD resolution, terminal naming, prunable guard
 - [Empty States](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/spec/empty-states.md) — Git unavailable, no repository, no worktrees messages
+- [Custom Commands](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/spec/custom-commands.md) — Custom commands: settings, execution, context menu
 
 ## Installation
 

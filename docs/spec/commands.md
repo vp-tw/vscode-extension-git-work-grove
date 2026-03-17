@@ -18,6 +18,8 @@ All commands use the `gitWorkGrove.*` prefix.
 | `copyPath` | Copy Path | — | `gitWorkGrove.hasRepository` |
 | `copyWorktreeConfigPath` | Copy Worktree Config Path | — | `gitWorkGrove.hasRepository` |
 | `openInTerminal` | Open in Terminal | `$(terminal)` | `gitWorkGrove.hasRepository` |
+| `customCommand.directory` | Custom Commands... | — | `gitWorkGrove.hasRepository` |
+| `customCommand.workspace` | Custom Commands... | — | `gitWorkGrove.hasRepository` |
 | `revealInOS` | Reveal in Finder | — | `gitWorkGrove.hasRepository` |
 | `refresh` | Refresh | `$(refresh)` | `gitWorkGrove.hasRepository` |
 | `showOutput` | Show Output | — | *(always)* |
@@ -45,6 +47,8 @@ All commands use the `gitWorkGrove.*` prefix.
 | `copyPath` | `5_cutcopypaste@2` | *(same as copyName)* AND NOT `viewItem =~ /prunable/` |
 | `copyMissingPath` | `5_cutcopypaste@2` | `viewItem =~ /prunable/` |
 | `copyWorktreeConfigPath` | `5_cutcopypaste@3` | `viewItem =~ /prunable/` |
+| `customCommand.directory` | `custom@1` | `hasCustomCommands.directory` AND `viewItem =~ /^worktree\|^repository\|^favorite\./` AND NOT `viewItem =~ /workspaceFile/` AND NOT `viewItem =~ /prunable/` |
+| `customCommand.workspace` | `custom@1` | `hasCustomCommands.workspace` AND `viewItem =~ /^workspaceFile\|^favorite\.workspaceFile/` |
 | `openInTerminal` | `inline` | `viewItem =~ /^worktree\|^workspaceFile\|^repository/` AND NOT `viewItem =~ /favorite/` AND NOT `viewItem =~ /prunable/` |
 | `addFavorite` | `inline` | `viewItem =~ /^worktree\|^workspaceFile\|^repository/` AND NOT `viewItem =~ /favorite/` AND NOT `viewItem =~ /prunable/` |
 | `removeFavorite` | `inline` | `viewItem =~ /favorite/` |
@@ -148,9 +152,18 @@ Debounced refresh (`debouncedRefresh`) used by FileSystemWatcher — 500ms debou
 
 Builds a set of valid paths from: all worktree paths + favorites that exist on disk. Passes to `FavoritesService.cleanupStale()`.
 
+### Custom Commands
+
+Shows a QuickPick of user-defined commands configured in settings. See [Custom Commands spec](custom-commands.md) for full details.
+
+- `customCommand.directory` — for repository/worktree items
+- `customCommand.workspace` — for workspace file items
+
 ## Context Keys
 
 | Key | Set when |
 |---|---|
 | `gitWorkGrove.hasRepository` | A git repository is found in workspace folders |
 | `gitWorkGrove.gitUnavailable` | `git --version` fails |
+| `gitWorkGrove.hasCustomCommands.directory` | `customCommands.directory` setting has at least one valid entry |
+| `gitWorkGrove.hasCustomCommands.workspace` | `customCommands.workspace` setting has at least one valid entry |

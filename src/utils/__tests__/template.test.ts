@@ -1,4 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("vscode", () => ({
+  workspace: { getConfiguration: () => ({ get: (_k: string, d: unknown) => d }) },
+}));
+
+const { workspaceFileVars } = await import("../template.js");
 
 // renderTemplate is a pure function — no vscode mock needed
 // Import directly from source to avoid vscode dependency in getter functions
@@ -180,5 +186,12 @@ describe("renderTemplate", () => {
       expect(renderTemplate("{branch|{head}}", { branch: "", head: "abc" }))
         .toBe("abc");
     });
+  });
+});
+
+describe("workspaceFileVars", () => {
+  it("includes dir variable as parent directory of filePath", () => {
+    const vars = workspaceFileVars("my-workspace", "/repo/worktrees/feature/my-workspace.code-workspace", undefined);
+    expect(vars.dir).toBe("/repo/worktrees/feature");
   });
 });
