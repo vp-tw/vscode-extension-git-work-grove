@@ -1,6 +1,5 @@
 import * as fs from "node:fs";
 import * as os from "node:os";
-import * as path from "node:path";
 
 let resolvedHome: string | undefined;
 
@@ -34,7 +33,7 @@ export function abbreviatePath(absolutePath: string): string {
     // Everything at or after .git: always full
     if (dotGitIndex !== -1 && i >= dotGitIndex) return part;
     // Abbreviate to first character
-    return part[0] ?? part;
+    return part[0];
   });
 
   const result = abbreviated.join("/");
