@@ -62,4 +62,20 @@ describe("validateCustomCommand", () => {
   it("returns true when env is omitted", () => {
     expect(validateCustomCommand({ label: "Test", command: ["echo"] })).toBe(true);
   });
+
+  it("returns true when mode is 'spawn'", () => {
+    expect(validateCustomCommand({ label: "Test", command: ["echo"], mode: "spawn" })).toBe(true);
+  });
+
+  it("returns true when mode is 'terminal'", () => {
+    expect(validateCustomCommand({ label: "Test", command: ["echo"], mode: "terminal" })).toBe(true);
+  });
+
+  it("returns true when mode is omitted", () => {
+    expect(validateCustomCommand({ label: "Test", command: ["echo"] })).toBe(true);
+  });
+
+  it("returns false when mode is invalid", () => {
+    expect(validateCustomCommand({ label: "Test", command: ["echo"], mode: "invalid" })).toBe(false);
+  });
 });

@@ -30,4 +30,5 @@ export interface CustomCommandConfig {
   label: string;
   command: Array<string>;
   env?: Record<string, string>;
+  mode?: "spawn" | "terminal";
 }

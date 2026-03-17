@@ -122,7 +122,36 @@ Open VS Code Settings (`Cmd+,` / `Ctrl+,`) and search for `git-work-grove`:
 
 ### Custom Commands
 
-Define custom commands that appear in the tree view context menu. Two settings are available — one for directory items (repository/worktree), one for workspace file items:
+Define custom commands that appear in the tree view context menu. Two settings are available:
+
+- `git-work-grove.customCommands.directory` — for repository/worktree items
+- `git-work-grove.customCommands.workspace` — for workspace file items
+
+#### Entry Schema
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `label` | `string` | Yes | Display text in context menu and QuickPick |
+| `command` | `string[]` | Yes | Command as `[bin, ...args]` — supports template variables |
+| `env` | `Record<string, string>` | No | Environment variables — values support template variables |
+| `mode` | `"spawn"` \| `"terminal"` | No | Execution mode (default: `"spawn"`) |
+
+**Execution modes:**
+
+- **`"spawn"`** (default) — Runs the command as a detached background process (fire-and-forget). The process outlives the extension and runs silently.
+- **`"terminal"`** — Runs the command in a VS Code integrated terminal. The terminal stays open so you can see output and interact with the process. Ideal for dev servers, REPLs, and interactive CLI tools.
+
+#### Template Variables
+
+Directory items (`customCommands.directory`): `{name}`, `{branch}`, `{ref}`, `{head}`, `{path}`
+
+Workspace items (`customCommands.workspace`): all of the above, plus `{dir}` (parent directory) and `{worktree}` (parent worktree folder name)
+
+Both `command` and `env` values support template variables with fallback syntax (`{branch|detached}`) and conditional sections (`{?branch}...{/branch}`). See [Template Customization](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/templates.md) for syntax reference.
+
+#### Examples
+
+**Run a dev server in terminal:**
 
 ```json
 {
@@ -130,19 +159,111 @@ Define custom commands that appear in the tree view context menu. Two settings a
     {
       "command": ["npm", "run", "dev"],
       "env": { "NODE_ENV": "development" },
-      "label": "Run Dev Server"
-    }
-  ],
-  "git-work-grove.customCommands.workspace": [
-    {
-      "command": ["code", "--goto", "{path}"],
-      "label": "Open in Terminal"
+      "label": "Run Dev Server",
+      "mode": "terminal"
     }
   ]
 }
 ```
 
-Each entry has a `label` (shown in QuickPick), a `command` array (`[bin, ...args]`), and an optional `env` object. Both `command` and `env` values support template variables (`{name}`, `{branch}`, `{ref}`, `{head}`, `{path}` — workspace items also have `{dir}` and `{worktree}`).
+**Open in an external terminal emulator (macOS):**
+
+```json
+{
+  "git-work-grove.customCommands.directory": [
+    {
+      "command": ["open", "-a", "Terminal", "{path}"],
+      "label": "Open in Terminal.app"
+    }
+  ]
+}
+```
+
+Other terminal emulators:
+
+| App | `command` |
+|-----|-----------|
+| iTerm2 | `["open", "-a", "iTerm", "{path}"]` |
+| Ghostty | `["open", "-a", "Ghostty", "--args", "--working-directory={path}", "--window-inherit-working-directory=false"]` |
+| WezTerm | `["wezterm", "start", "--cwd", "{path}"]` |
+| Alacritty | `["alacritty", "--working-directory", "{path}"]` |
+| Kitty | `["kitty", "--directory", "{path}"]` |
+
+**Open in an external editor:**
+
+```json
+{
+  "git-work-grove.customCommands.directory": [
+    {
+      "command": ["zed", "{path}"],
+      "label": "Open in Zed"
+    }
+  ]
+}
+```
+
+**Environment variables with template variables:**
+
+```json
+{
+  "git-work-grove.customCommands.directory": [
+    {
+      "command": ["open", "-a", "Ghostty", "--args", "--working-directory={path}"],
+      "env": { "GHOSTTY_TITLE": "{ref}" },
+      "label": "Open in Ghostty"
+    }
+  ]
+}
+```
+
+**Multiple commands (shown as QuickPick):**
+
+```json
+{
+  "git-work-grove.customCommands.directory": [
+    {
+      "command": ["npm", "run", "dev"],
+      "label": "Run Dev Server",
+      "mode": "terminal"
+    },
+    {
+      "command": ["zed", "{path}"],
+      "label": "Open in Zed"
+    }
+  ]
+}
+```
+
+**Start Claude Code in a worktree:**
+
+```json
+{
+  "git-work-grove.customCommands.directory": [
+    {
+      "command": ["claude"],
+      "label": "Claude Code",
+      "mode": "terminal"
+    }
+  ]
+}
+```
+
+**Workspace file commands** — use `{dir}` for the parent directory or `{path}` for the file itself:
+
+```json
+{
+  "git-work-grove.customCommands.workspace": [
+    {
+      "command": ["open", "-a", "Terminal", "{dir}"],
+      "label": "Open dir in Terminal.app"
+    }
+  ]
+}
+```
+
+#### Known Limitation
+
+Terminal mode (`"mode": "terminal"`) uses the `shell-quote` library for POSIX-style shell quoting. This may not work correctly in PowerShell terminals (Windows, macOS, or Linux) for commands with arguments containing spaces or special characters. If your VS Code terminal profile uses PowerShell, prefer `"mode": "spawn"` for such commands.
 
 ### Template Customization
 

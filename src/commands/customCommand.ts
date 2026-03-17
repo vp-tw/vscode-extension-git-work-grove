@@ -5,6 +5,7 @@ import { spawn } from "node:child_process";
 import * as fs from "node:fs";
 import process from "node:process";
 
+import { quote } from "shell-quote";
 import * as vscode from "vscode";
 
 import { CMD_SHOW_OUTPUT } from "../constants.js";
@@ -50,6 +51,18 @@ function spawnCommand(bin: string, args: Array<string>, env: Record<string, stri
   }
 }
 
+function terminalCommand(label: string, bin: string, args: Array<string>, env: Record<string, string>, cwd: string): void {
+  try {
+    const terminal = vscode.window.createTerminal({ cwd, env, name: label });
+    terminal.sendText(quote([bin, ...args]));
+    terminal.show();
+    log(`Custom command (terminal): ${bin} ${args.join(" ")}`);
+  } catch (error) {
+    logError(`Failed to run '${bin}' in terminal`, error);
+    void vscode.window.showErrorMessage(`Failed to run '${bin}' in terminal.`);
+  }
+}
+
 export async function runCustomCommand(
   item: TreeActionableItem | undefined,
   type: "directory" | "workspace",
@@ -75,6 +88,7 @@ export async function runCustomCommand(
       ...rendered,
       label: cmd.label,
       detail: `${rendered.bin} ${rendered.args.join(" ")}`,
+      mode: cmd.mode,
     };
   });
 
@@ -84,5 +98,9 @@ export async function runCustomCommand(
 
   if (!selected) return;
 
-  spawnCommand(selected.bin, selected.args, selected.env, resolved.cwd);
+  if (selected.mode === "terminal") {
+    terminalCommand(selected.label, selected.bin, selected.args, selected.env, resolved.cwd);
+  } else {
+    spawnCommand(selected.bin, selected.args, selected.env, resolved.cwd);
+  }
 }
