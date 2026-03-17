@@ -25,7 +25,10 @@ export function resolveItemContext(item: TreeActionableItem): ItemContext | unde
     switch (item.favoriteType) {
       case "repo":
       case "worktree": {
-        const info = item.worktreeInfo!;
+        const info = item.worktreeInfo;
+        if (!info) {
+          return undefined;
+        }
         return { cwd: item.favoritePath, vars: worktreeVars(info) };
       }
       case "workspaceFile": {
