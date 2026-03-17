@@ -38,7 +38,8 @@ vi.mock("node:child_process", () => ({
 }));
 
 vi.mock("shell-quote", () => ({
-  quote: (args: Array<string>) => args.join(" "),
+  quote: (args: Array<string>) =>
+    args.map(arg => (arg.includes(" ") ? `'${arg}'` : arg)).join(" "),
 }));
 
 const mockResolveItemContext = vi.fn(() => ({
@@ -99,6 +100,16 @@ describe("runCustomCommand", () => {
       });
       expect(mockSendText).toHaveBeenCalledWith("echo hello");
       expect(mockShow).toHaveBeenCalled();
+    });
+
+    it("quotes arguments with spaces", async () => {
+      mockGetCustomCommands.mockReturnValue([
+        { command: ["echo", "hello world"], env: {}, label: "Echo", mode: "terminal" },
+      ]);
+
+      await runCustomCommand(makeItem(), "directory");
+
+      expect(mockSendText).toHaveBeenCalledWith("echo 'hello world'");
     });
   });
 
