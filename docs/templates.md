@@ -6,78 +6,78 @@ All tree item labels and descriptions are customizable via `git-work-grove.templ
 
 Based on the 4 fundamental cases (repository, worktree, repositoryWorkspace, worktreeWorkspace), each has a normal and favorite variant:
 
-| # | Setting prefix | Where it appears |
-|---|---|---|
-| 1 | `template.repository` | Repository header in tree |
-| 2 | `template.worktree` | Linked worktree in tree |
-| 3 | `template.repositoryWorkspace` | Workspace file under Repository |
-| 4 | `template.worktreeWorkspace` | Workspace file under linked worktree |
-| 5 | `template.favoriteRepository` | Favorited repository in Favorites section |
-| 6 | `template.favoriteWorktree` | Favorited worktree in Favorites section |
-| 7 | `template.favoriteRepositoryWorkspace` | Favorited workspace file from Repository |
-| 8 | `template.favoriteWorktreeWorkspace` | Favorited workspace file from linked worktree |
+| #   | Setting prefix                         | Where it appears                              |
+| --- | -------------------------------------- | --------------------------------------------- |
+| 1   | `template.repository`                  | Repository header in tree                     |
+| 2   | `template.worktree`                    | Linked worktree in tree                       |
+| 3   | `template.repositoryWorkspace`         | Workspace file under Repository               |
+| 4   | `template.worktreeWorkspace`           | Workspace file under linked worktree          |
+| 5   | `template.favoriteRepository`          | Favorited repository in Favorites section     |
+| 6   | `template.favoriteWorktree`            | Favorited worktree in Favorites section       |
+| 7   | `template.favoriteRepositoryWorkspace` | Favorited workspace file from Repository      |
+| 8   | `template.favoriteWorktreeWorkspace`   | Favorited workspace file from linked worktree |
 
 Each has `.label` and `.description`. Set to empty string to hide. The 4 non-favorite types also have a `.terminalName` setting for the Open in Terminal command. Favorites reuse the corresponding non-favorite `terminalName` template.
 
 ## Settings
 
-| Setting | Default |
-|---|---|
-| `template.repository.label` | `Repository` |
-| `template.repository.description` | *(empty)* |
-| `template.worktree.label` | `{name}` |
-| `template.worktree.description` | *(empty)* |
-| `template.repositoryWorkspace.label` | `{name}` |
-| `template.repositoryWorkspace.description` | *(empty)* |
-| `template.worktreeWorkspace.label` | `{name}` |
-| `template.worktreeWorkspace.description` | *(empty)* |
-| `template.favoriteRepository.label` | `Repository` |
-| `template.favoriteRepository.description` | *(empty)* |
-| `template.favoriteWorktree.label` | `{name}` |
-| `template.favoriteWorktree.description` | *(empty)* |
-| `template.favoriteRepositoryWorkspace.label` | `{name}` |
-| `template.favoriteRepositoryWorkspace.description` | *(empty)* |
-| `template.favoriteWorktreeWorkspace.label` | `{name}` |
-| `template.favoriteWorktreeWorkspace.description` | `🌲 {worktree}` |
-| `template.repository.terminalName` | `Repository` |
-| `template.worktree.terminalName` | `{name}` |
-| `template.repositoryWorkspace.terminalName` | `{name}` |
-| `template.worktreeWorkspace.terminalName` | `{name}` |
+| Setting                                            | Default         |
+| -------------------------------------------------- | --------------- |
+| `template.repository.label`                        | `Repository`    |
+| `template.repository.description`                  | _(empty)_       |
+| `template.worktree.label`                          | `{name}`        |
+| `template.worktree.description`                    | _(empty)_       |
+| `template.repositoryWorkspace.label`               | `{name}`        |
+| `template.repositoryWorkspace.description`         | _(empty)_       |
+| `template.worktreeWorkspace.label`                 | `{name}`        |
+| `template.worktreeWorkspace.description`           | _(empty)_       |
+| `template.favoriteRepository.label`                | `Repository`    |
+| `template.favoriteRepository.description`          | _(empty)_       |
+| `template.favoriteWorktree.label`                  | `{name}`        |
+| `template.favoriteWorktree.description`            | _(empty)_       |
+| `template.favoriteRepositoryWorkspace.label`       | `{name}`        |
+| `template.favoriteRepositoryWorkspace.description` | _(empty)_       |
+| `template.favoriteWorktreeWorkspace.label`         | `{name}`        |
+| `template.favoriteWorktreeWorkspace.description`   | `🌲 {worktree}` |
+| `template.repository.terminalName`                 | `Repository`    |
+| `template.worktree.terminalName`                   | `{name}`        |
+| `template.repositoryWorkspace.terminalName`        | `{name}`        |
+| `template.worktreeWorkspace.terminalName`          | `{name}`        |
 
 ## Variables
 
 ### Repository / Worktree items (types 1, 2, 5, 6)
 
-| Variable | Value | Example |
-|---|---|---|
-| `{name}` | Worktree folder name | `stellar-app`, `feat-auth` |
-| `{branch}` | Git branch (empty if detached HEAD) | `main`, `feat/auth` |
-| `{ref}` | Branch or short commit hash (always non-empty) | `main`, `abc12345` |
-| `{head}` | Short commit hash (8 chars) | `abc12345` |
-| `{path}` | Filesystem path | `/path/to/feat-auth` |
+| Variable   | Value                                          | Example                    |
+| ---------- | ---------------------------------------------- | -------------------------- |
+| `{name}`   | Worktree folder name                           | `stellar-app`, `feat-auth` |
+| `{branch}` | Git branch (empty if detached HEAD)            | `main`, `feat/auth`        |
+| `{ref}`    | Branch or short commit hash (always non-empty) | `main`, `abc12345`         |
+| `{head}`   | Short commit hash (8 chars)                    | `abc12345`                 |
+| `{path}`   | Filesystem path                                | `/path/to/feat-auth`       |
 
 ### Repository Workspace items (types 3, 7)
 
-| Variable | Value | Example |
-|---|---|---|
-| `{name}` | File name (without `.code-workspace`) | `stellar-app` |
-| `{branch}` | Repository branch (empty if detached HEAD) | `main` |
-| `{ref}` | Branch or short commit hash (always non-empty) | `main`, `abc12345` |
-| `{head}` | Short commit hash (8 chars) | `abc12345` |
-| `{path}` | Workspace file path | `/path/to/repo/stellar-app.code-workspace` |
-| `{dir}` | Parent directory of workspace file path | `/path/to/repo` |
+| Variable   | Value                                          | Example                                    |
+| ---------- | ---------------------------------------------- | ------------------------------------------ |
+| `{name}`   | File name (without `.code-workspace`)          | `stellar-app`                              |
+| `{branch}` | Repository branch (empty if detached HEAD)     | `main`                                     |
+| `{ref}`    | Branch or short commit hash (always non-empty) | `main`, `abc12345`                         |
+| `{head}`   | Short commit hash (8 chars)                    | `abc12345`                                 |
+| `{path}`   | Workspace file path                            | `/path/to/repo/stellar-app.code-workspace` |
+| `{dir}`    | Parent directory of workspace file path        | `/path/to/repo`                            |
 
 ### Worktree Workspace items (types 4, 8)
 
-| Variable | Value | Example |
-|---|---|---|
-| `{name}` | File name (without `.code-workspace`) | `stellar-app` |
-| `{worktree}` | Parent worktree folder name | `feat-auth` |
-| `{branch}` | Parent worktree branch (empty if detached HEAD) | `feat/auth` |
-| `{ref}` | Branch or short commit hash (always non-empty) | `feat/auth`, `abc12345` |
-| `{head}` | Short commit hash (8 chars) | `abc12345` |
-| `{path}` | Workspace file path | `/path/to/feat-auth/stellar-app.code-workspace` |
-| `{dir}` | Parent directory of workspace file path | `/path/to/feat-auth` |
+| Variable     | Value                                           | Example                                         |
+| ------------ | ----------------------------------------------- | ----------------------------------------------- |
+| `{name}`     | File name (without `.code-workspace`)           | `stellar-app`                                   |
+| `{worktree}` | Parent worktree folder name                     | `feat-auth`                                     |
+| `{branch}`   | Parent worktree branch (empty if detached HEAD) | `feat/auth`                                     |
+| `{ref}`      | Branch or short commit hash (always non-empty)  | `feat/auth`, `abc12345`                         |
+| `{head}`     | Short commit hash (8 chars)                     | `abc12345`                                      |
+| `{path}`     | Workspace file path                             | `/path/to/feat-auth/stellar-app.code-workspace` |
+| `{dir}`      | Parent directory of workspace file path         | `/path/to/feat-auth`                            |
 
 Note: `{worktree}` and `{dir}` are only available for workspace items. `{worktree}` is only non-empty for worktree workspace items (types 4, 8). `{dir}` is available for all workspace items (types 3, 4, 7, 8).
 

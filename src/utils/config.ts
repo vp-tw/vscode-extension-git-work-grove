@@ -11,9 +11,7 @@ export function getOpenBehavior(): OpenBehavior {
 }
 
 export function getWorkspaceFileInclude(): Array<string> {
-  return get<Array<string>>("git-work-grove.workspaceFile.include", [
-    "*.code-workspace",
-  ]);
+  return get<Array<string>>("git-work-grove.workspaceFile.include", ["*.code-workspace"]);
 }
 
 export function getWorkspaceFileExclude(): Array<string> {
@@ -23,9 +21,5 @@ export function getWorkspaceFileExclude(): Array<string> {
 export async function updateOpenBehavior(value: OpenBehavior): Promise<void> {
   await vscode.workspace
     .getConfiguration()
-    .update(
-      "git-work-grove.openBehavior",
-      value,
-      vscode.ConfigurationTarget.Global,
-    );
+    .update("git-work-grove.openBehavior", value, vscode.ConfigurationTarget.Global);
 }

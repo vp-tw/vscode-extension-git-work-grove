@@ -15,10 +15,7 @@ export async function pruneWorktrees(
     vscode.window.showInformationMessage("Worktrees pruned successfully.");
   } catch (error) {
     logError("Failed to prune worktrees", error);
-    const action = await vscode.window.showErrorMessage(
-      "Failed to prune worktrees.",
-      "Show Logs",
-    );
+    const action = await vscode.window.showErrorMessage("Failed to prune worktrees.", "Show Logs");
     if (action === "Show Logs") {
       vscode.commands.executeCommand("gitWorkGrove.showOutput");
     }

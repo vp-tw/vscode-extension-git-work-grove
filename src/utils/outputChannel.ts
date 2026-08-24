@@ -16,7 +16,6 @@ export function log(message: string): void {
 }
 
 export function logError(message: string, error: unknown): void {
-  const errorMessage =
-    error instanceof Error ? error.stack ?? error.message : String(error);
+  const errorMessage = error instanceof Error ? (error.stack ?? error.message) : String(error);
   log(`ERROR: ${message}\n${errorMessage}`);
 }

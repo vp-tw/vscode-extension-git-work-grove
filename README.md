@@ -57,24 +57,24 @@ Click a workspace file to open it. Click a worktree to expand/collapse its child
 
 Right-click any item in the tree to access:
 
-| Action | Description |
-|--------|-------------|
-| **Open in New Window** | Opens the worktree or workspace file in a new VS Code window |
-| **Open in Current Window** | Opens in the current VS Code window |
-| **Open in Terminal** | Opens a terminal at the item's location |
-| **Reveal in Finder** | Opens the item's location in your OS file manager |
-| **Custom Commands...** | Runs a user-defined command (when configured) |
-| **Copy Name** | Copy the item's display name to clipboard |
-| **Copy Path** | Copy the item's filesystem path to clipboard |
+| Action                     | Description                                                  |
+| -------------------------- | ------------------------------------------------------------ |
+| **Open in New Window**     | Opens the worktree or workspace file in a new VS Code window |
+| **Open in Current Window** | Opens in the current VS Code window                          |
+| **Open in Terminal**       | Opens a terminal at the item's location                      |
+| **Reveal in Finder**       | Opens the item's location in your OS file manager            |
+| **Custom Commands...**     | Runs a user-defined command (when configured)                |
+| **Copy Name**              | Copy the item's display name to clipboard                    |
+| **Copy Path**              | Copy the item's filesystem path to clipboard                 |
 
 Favorite-specific actions appear as inline buttons:
 
-| Button | Description |
-|--------|-------------|
+| Button                               | Description                                                  |
+| ------------------------------------ | ------------------------------------------------------------ |
 | **Open in Terminal** (terminal icon) | Open a terminal at this item's location (non-favorites only) |
-| **Add Favorite** (star outline) | Pin this item to the Favorites section |
-| **Remove Favorite** (filled star) | Unpin from Favorites |
-| **Move Up / Move Down** (chevrons) | Reorder within Favorites |
+| **Add Favorite** (star outline)      | Pin this item to the Favorites section                       |
+| **Remove Favorite** (filled star)    | Unpin from Favorites                                         |
+| **Move Up / Move Down** (chevrons)   | Reorder within Favorites                                     |
 
 You can also drag and drop favorites to reorder them.
 
@@ -82,11 +82,11 @@ You can also drag and drop favorites to reorder them.
 
 The WORKGROVE panel header provides:
 
-| Action | Location | Description |
-|--------|----------|-------------|
-| **Refresh** | Header icon | Re-scan worktrees and workspace files |
-| **Prune Worktrees** | `...` overflow menu | Run `git worktree prune` to clean up stale records |
-| **Clean Stale Favorites** | `...` overflow menu | Remove favorites that no longer exist on disk |
+| Action                    | Location            | Description                                        |
+| ------------------------- | ------------------- | -------------------------------------------------- |
+| **Refresh**               | Header icon         | Re-scan worktrees and workspace files              |
+| **Prune Worktrees**       | `...` overflow menu | Run `git worktree prune` to clean up stale records |
+| **Clean Stale Favorites** | `...` overflow menu | Remove favorites that no longer exist on disk      |
 
 ### Open Behavior
 
@@ -110,15 +110,15 @@ Clicking the current item does nothing (it's already open).
 
 Open VS Code Settings (`Cmd+,` / `Ctrl+,`) and search for `git-work-grove`:
 
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `git-work-grove.openBehavior` | `ask` \| `newWindow` \| `currentWindow` \| `terminal` | `ask` | Default action when opening a workspace |
-| `git-work-grove.workspaceFile.include` | `string[]` | `["*.code-workspace"]` | Glob patterns for workspace file scanning |
-| `git-work-grove.workspaceFile.exclude` | `string[]` | `[]` | Glob patterns to exclude from scanning |
-| `git-work-grove.customCommands.directory` | `array` | `[]` | Custom commands for repository/worktree items |
-| `git-work-grove.customCommands.workspace` | `array` | `[]` | Custom commands for workspace file items |
-| `git-work-grove.template.*` | `string` | *(varies)* | Display templates (label, description, terminalName) — see [Template Customization](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/templates.md) |
-| `git-work-grove.favorites` | `string[]` | `[]` | Ordered list of favorited item paths (managed via the UI) |
+| Setting                                   | Type                                                  | Default                | Description                                                                                                                                                               |
+| ----------------------------------------- | ----------------------------------------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `git-work-grove.openBehavior`             | `ask` \| `newWindow` \| `currentWindow` \| `terminal` | `ask`                  | Default action when opening a workspace                                                                                                                                   |
+| `git-work-grove.workspaceFile.include`    | `string[]`                                            | `["*.code-workspace"]` | Glob patterns for workspace file scanning                                                                                                                                 |
+| `git-work-grove.workspaceFile.exclude`    | `string[]`                                            | `[]`                   | Glob patterns to exclude from scanning                                                                                                                                    |
+| `git-work-grove.customCommands.directory` | `array`                                               | `[]`                   | Custom commands for repository/worktree items                                                                                                                             |
+| `git-work-grove.customCommands.workspace` | `array`                                               | `[]`                   | Custom commands for workspace file items                                                                                                                                  |
+| `git-work-grove.template.*`               | `string`                                              | _(varies)_             | Display templates (label, description, terminalName) — see [Template Customization](https://github.com/vp-tw/vscode-extension-git-work-grove/blob/main/docs/templates.md) |
+| `git-work-grove.favorites`                | `string[]`                                            | `[]`                   | Ordered list of favorited item paths (managed via the UI)                                                                                                                 |
 
 ### Custom Commands
 
@@ -129,12 +129,12 @@ Define custom commands that appear in the tree view context menu. Two settings a
 
 #### Entry Schema
 
-| Property | Type | Required | Description |
-|----------|------|----------|-------------|
-| `label` | `string` | Yes | Display text in context menu and QuickPick |
-| `command` | `string[]` | Yes | Command as `[bin, ...args]` — supports template variables |
-| `env` | `Record<string, string>` | No | Environment variables — values support template variables |
-| `mode` | `"spawn"` \| `"terminal"` | No | Execution mode (default: `"spawn"`) |
+| Property  | Type                      | Required | Description                                               |
+| --------- | ------------------------- | -------- | --------------------------------------------------------- |
+| `label`   | `string`                  | Yes      | Display text in context menu and QuickPick                |
+| `command` | `string[]`                | Yes      | Command as `[bin, ...args]` — supports template variables |
+| `env`     | `Record<string, string>`  | No       | Environment variables — values support template variables |
+| `mode`    | `"spawn"` \| `"terminal"` | No       | Execution mode (default: `"spawn"`)                       |
 
 **Execution modes:**
 
@@ -181,13 +181,13 @@ Both `command` and `env` values support template variables with fallback syntax 
 
 Other terminal emulators:
 
-| App | `command` |
-|-----|-----------|
-| iTerm2 | `["open", "-a", "iTerm", "{path}"]` |
-| Ghostty | `["open", "-a", "Ghostty", "--args", "--working-directory={path}", "--window-inherit-working-directory=false"]` |
-| WezTerm | `["wezterm", "start", "--cwd", "{path}"]` |
-| Alacritty | `["alacritty", "--working-directory", "{path}"]` |
-| Kitty | `["kitty", "--directory", "{path}"]` |
+| App       | `command`                                                                                                       |
+| --------- | --------------------------------------------------------------------------------------------------------------- |
+| iTerm2    | `["open", "-a", "iTerm", "{path}"]`                                                                             |
+| Ghostty   | `["open", "-a", "Ghostty", "--args", "--working-directory={path}", "--window-inherit-working-directory=false"]` |
+| WezTerm   | `["wezterm", "start", "--cwd", "{path}"]`                                                                       |
+| Alacritty | `["alacritty", "--working-directory", "{path}"]`                                                                |
+| Kitty     | `["kitty", "--directory", "{path}"]`                                                                            |
 
 **Open in an external editor:**
 
@@ -277,29 +277,29 @@ All commands use the `Git WorkGrove:` prefix. Some are available via the Command
 
 ### Command Palette
 
-| Command | Description |
-|---------|-------------|
-| Refresh | Re-scan worktrees and workspace files |
-| Prune Worktrees | Run `git worktree prune` to clean up stale records |
-| Show Output | Open the extension's output channel for debugging |
-| Clean Stale Favorites | Remove favorites pointing to deleted items |
+| Command               | Description                                        |
+| --------------------- | -------------------------------------------------- |
+| Refresh               | Re-scan worktrees and workspace files              |
+| Prune Worktrees       | Run `git worktree prune` to clean up stale records |
+| Show Output           | Open the extension's output channel for debugging  |
+| Clean Stale Favorites | Remove favorites pointing to deleted items         |
 
 ### Context Menu Only
 
 These commands appear when right-clicking items in the tree view:
 
-| Command | Description |
-|---------|-------------|
-| Open in New Window | Open worktree or workspace file in a new VS Code window |
-| Open in Current Window | Open in the current VS Code window |
-| Open in Terminal | Open a terminal at the item's location |
-| Reveal in Finder | Open the item's location in your OS file manager |
-| Custom Commands... | Run a user-defined command (when configured) |
-| Copy Name | Copy the item's display name to clipboard |
-| Copy Path | Copy the item's filesystem path to clipboard |
-| Add Favorite | Pin this item to the Favorites section |
-| Remove Favorite | Unpin from Favorites |
-| Move Favorite Up / Down | Reorder within Favorites |
+| Command                 | Description                                             |
+| ----------------------- | ------------------------------------------------------- |
+| Open in New Window      | Open worktree or workspace file in a new VS Code window |
+| Open in Current Window  | Open in the current VS Code window                      |
+| Open in Terminal        | Open a terminal at the item's location                  |
+| Reveal in Finder        | Open the item's location in your OS file manager        |
+| Custom Commands...      | Run a user-defined command (when configured)            |
+| Copy Name               | Copy the item's display name to clipboard               |
+| Copy Path               | Copy the item's filesystem path to clipboard            |
+| Add Favorite            | Pin this item to the Favorites section                  |
+| Remove Favorite         | Unpin from Favorites                                    |
+| Move Favorite Up / Down | Reorder within Favorites                                |
 
 ## Documentation
 

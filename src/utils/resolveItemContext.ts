@@ -9,7 +9,12 @@ import { workspaceFileVars, worktreeVars } from "./template.js";
  * Covers WorktreeItem, WorkspaceFileItem, GroupHeaderItem (repository), and FavoriteItem.
  */
 export type TreeActionableItem =
-  | { favoritePath: string; favoriteType: "repo" | "worktree" | "workspaceFile"; parentWorktreeInfo?: WorktreeInfo; worktreeInfo?: WorktreeInfo }
+  | {
+      favoritePath: string;
+      favoriteType: "repo" | "worktree" | "workspaceFile";
+      parentWorktreeInfo?: WorktreeInfo;
+      worktreeInfo?: WorktreeInfo;
+    }
   | { parentWorktreeInfo: WorktreeInfo; workspaceFileInfo: WorkspaceFileInfo }
   | { worktreeInfo: WorktreeInfo };
 
@@ -34,15 +39,27 @@ export function resolveItemContext(item: TreeActionableItem): ItemContext | unde
       case "workspaceFile": {
         const wsName = path.basename(item.favoritePath, ".code-workspace");
         const vars = workspaceFileVars(wsName, item.favoritePath, item.parentWorktreeInfo);
-        return { cwd: path.dirname(item.favoritePath), parentWorktreeInfo: item.parentWorktreeInfo, vars };
+        return {
+          cwd: path.dirname(item.favoritePath),
+          parentWorktreeInfo: item.parentWorktreeInfo,
+          vars,
+        };
       }
     }
   }
 
   // WorkspaceFileItem
   if ("workspaceFileInfo" in item) {
-    const vars = workspaceFileVars(item.workspaceFileInfo.name, item.workspaceFileInfo.path, item.parentWorktreeInfo);
-    return { cwd: path.dirname(item.workspaceFileInfo.path), parentWorktreeInfo: item.parentWorktreeInfo, vars };
+    const vars = workspaceFileVars(
+      item.workspaceFileInfo.name,
+      item.workspaceFileInfo.path,
+      item.parentWorktreeInfo,
+    );
+    return {
+      cwd: path.dirname(item.workspaceFileInfo.path),
+      parentWorktreeInfo: item.parentWorktreeInfo,
+      vars,
+    };
   }
 
   // WorktreeItem / GroupHeaderItem (repository)

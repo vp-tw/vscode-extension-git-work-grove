@@ -4,9 +4,7 @@ import { log } from "../utils/outputChannel.js";
 
 export class FavoritesService {
   getFavorites(): Array<string> {
-    return vscode.workspace
-      .getConfiguration("git-work-grove")
-      .get<Array<string>>("favorites", []);
+    return vscode.workspace.getConfiguration("git-work-grove").get<Array<string>>("favorites", []);
   }
 
   isFavorite(path: string): boolean {
@@ -31,10 +29,13 @@ export class FavoritesService {
   async move(fromIndex: number, toIndex: number): Promise<void> {
     const favorites = this.getFavorites();
     if (
-      fromIndex < 0 || fromIndex >= favorites.length
-      || toIndex < 0 || toIndex >= favorites.length
-      || fromIndex === toIndex
-    ) return;
+      fromIndex < 0 ||
+      fromIndex >= favorites.length ||
+      toIndex < 0 ||
+      toIndex >= favorites.length ||
+      fromIndex === toIndex
+    )
+      return;
     const [item] = favorites.splice(fromIndex, 1);
     favorites.splice(toIndex, 0, item);
     await this.updateFavorites(favorites);
@@ -42,10 +43,10 @@ export class FavoritesService {
 
   async cleanupStale(validPaths: Set<string>): Promise<number> {
     const favorites = this.getFavorites();
-    const stale = favorites.filter(fav => !validPaths.has(fav));
+    const stale = favorites.filter((fav) => !validPaths.has(fav));
 
     if (stale.length > 0) {
-      const updated = favorites.filter(fav => validPaths.has(fav));
+      const updated = favorites.filter((fav) => validPaths.has(fav));
       await this.updateFavorites(updated);
       log(`Removed ${stale.length} stale favorite(s)`);
 

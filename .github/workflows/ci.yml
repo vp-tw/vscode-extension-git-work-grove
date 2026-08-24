@@ -23,6 +23,8 @@ jobs:
 
       - run: pnpm lint:es
 
+      - run: pnpm lint:oxfmt
+
       - run: pnpm test
 
       - run: pnpm build

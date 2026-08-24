@@ -8,7 +8,8 @@ vi.mock("vscode", () => ({
   workspace: {
     getConfiguration: vi.fn(() => ({
       get: vi.fn((_key: string, defaultValue: Array<string>) =>
-        store.length > 0 ? store : defaultValue),
+        store.length > 0 ? store : defaultValue,
+      ),
       update: vi.fn(async (_key: string, value: Array<string>) => {
         store = [...value];
       }),

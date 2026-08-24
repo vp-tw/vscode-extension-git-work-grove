@@ -9,9 +9,17 @@ import * as path from "node:path";
 import * as vscode from "vscode";
 
 import { MAX_WORKSPACE_FILES } from "../constants.js";
-import { isWorkspaceFileDisplayCurrent, isWorktreeDisplayCurrent } from "../utils/currentIndicator.js";
+import {
+  isWorkspaceFileDisplayCurrent,
+  isWorktreeDisplayCurrent,
+} from "../utils/currentIndicator.js";
 import { logError } from "../utils/outputChannel.js";
-import { getRepositoryDescription, getRepositoryLabel, renderTemplate, worktreeVars } from "../utils/template.js";
+import {
+  getRepositoryDescription,
+  getRepositoryLabel,
+  renderTemplate,
+  worktreeVars,
+} from "../utils/template.js";
 import { buildTooltip } from "../utils/tooltip.js";
 import { buildResourceUri } from "./currentDecorationProvider.js";
 import { FavoriteItem } from "./favoriteItem.js";
@@ -50,9 +58,9 @@ class InfoItem extends vscode.TreeItem {
   }
 }
 
-export class WorktreeTreeProvider implements
-  vscode.TreeDataProvider<TreeNode>,
-  vscode.TreeDragAndDropController<TreeNode> {
+export class WorktreeTreeProvider
+  implements vscode.TreeDataProvider<TreeNode>, vscode.TreeDragAndDropController<TreeNode>
+{
   private readonly _onDidChangeTreeData = new vscode.EventEmitter<TreeNode | undefined>();
   readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
@@ -129,10 +137,7 @@ export class WorktreeTreeProvider implements
       (item): item is FavoriteItem => item instanceof FavoriteItem,
     );
     if (favoriteItems.length === 0) return;
-    dataTransfer.set(
-      DRAG_MIME,
-      new vscode.DataTransferItem(favoriteItems[0].favoriteIndex),
-    );
+    dataTransfer.set(DRAG_MIME, new vscode.DataTransferItem(favoriteItems[0].favoriteIndex));
   }
 
   async handleDrop(
@@ -175,11 +180,9 @@ export class WorktreeTreeProvider implements
       const workspaceFilePath = this.getWorkspaceFilePath();
 
       // Auto-cleanup: silently remove favorites pointing to deleted items
-      const worktreePaths = new Set(worktrees.map(wt => wt.path));
+      const worktreePaths = new Set(worktrees.map((wt) => wt.path));
       const favPaths = this.favorites.getFavorites();
-      const staleFavs = favPaths.filter(
-        fav => !worktreePaths.has(fav) && !fs.existsSync(fav),
-      );
+      const staleFavs = favPaths.filter((fav) => !worktreePaths.has(fav) && !fs.existsSync(fav));
       for (const stale of staleFavs) {
         await this.favorites.remove(stale);
       }
@@ -197,17 +200,19 @@ export class WorktreeTreeProvider implements
       const nodes: Array<TreeNode> = [];
 
       if (favoriteItems.length > 0) {
-        nodes.push(new GroupHeaderItem(
-          "Favorites",
-          [],
-          vscode.TreeItemCollapsibleState.Expanded,
-          favoriteItems,
-        ));
+        nodes.push(
+          new GroupHeaderItem(
+            "Favorites",
+            [],
+            vscode.TreeItemCollapsibleState.Expanded,
+            favoriteItems,
+          ),
+        );
       }
 
       // Main worktree in its own section
-      const main = worktrees.find(wt => wt.isMain);
-      const linked = worktrees.filter(wt => !wt.isMain);
+      const main = worktrees.find((wt) => wt.isMain);
+      const linked = worktrees.filter((wt) => !wt.isMain);
       const sorted = this.sortWorktrees(linked);
 
       if (main) {
@@ -252,7 +257,9 @@ export class WorktreeTreeProvider implements
       for (const wt of sorted) {
         const showCurrent = isWorktreeDisplayCurrent(wt.isCurrent, workspaceFilePath);
         const wtHasChildren = this.scanner.scan(wt.path).totalCount > 0;
-        nodes.push(new WorktreeItem(wt, this.favorites.isFavorite(wt.path), showCurrent, wtHasChildren));
+        nodes.push(
+          new WorktreeItem(wt, this.favorites.isFavorite(wt.path), showCurrent, wtHasChildren),
+        );
       }
 
       return nodes;
@@ -269,7 +276,7 @@ export class WorktreeTreeProvider implements
     worktrees: Array<WorktreeInfo>,
     workspaceFilePath: string | undefined,
   ): Array<ResolvedFavorite> {
-    const wtByPath = new Map(worktrees.map(wt => [wt.path, wt]));
+    const wtByPath = new Map(worktrees.map((wt) => [wt.path, wt]));
     const resolved: Array<ResolvedFavorite> = [];
 
     for (const favPath of favPaths) {
@@ -288,7 +295,7 @@ export class WorktreeTreeProvider implements
 
       // Check if it's a workspace file belonging to this repo
       if (!fs.existsSync(favPath)) continue;
-      const parentWt = worktrees.find(w => favPath.startsWith(w.path + path.sep));
+      const parentWt = worktrees.find((w) => favPath.startsWith(w.path + path.sep));
       if (!parentWt) continue;
       const isCurrent = isWorkspaceFileDisplayCurrent(favPath, workspaceFilePath);
 

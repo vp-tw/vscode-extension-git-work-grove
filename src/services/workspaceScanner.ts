@@ -44,22 +44,20 @@ export class WorkspaceScanner {
       .filter((entry) => {
         if (!entry.isFile()) return false;
         const name = entry.name;
-        const included = includePatterns.some(p => matchSimpleGlob(p, name));
+        const included = includePatterns.some((p) => matchSimpleGlob(p, name));
         if (!included) return false;
-        const excluded = excludePatterns.some(p => matchSimpleGlob(p, name));
+        const excluded = excludePatterns.some((p) => matchSimpleGlob(p, name));
         return !excluded;
       })
-      .map(entry => entry.name)
+      .map((entry) => entry.name)
       .sort();
 
     const totalCount = matched.length;
 
-    const files: Array<WorkspaceFileInfo> = matched
-      .slice(0, MAX_WORKSPACE_FILES)
-      .map(name => ({
-        name: name.replace(/\.code-workspace$/, ""),
-        path: path.join(worktreePath, name),
-      }));
+    const files: Array<WorkspaceFileInfo> = matched.slice(0, MAX_WORKSPACE_FILES).map((name) => ({
+      name: name.replace(/\.code-workspace$/, ""),
+      path: path.join(worktreePath, name),
+    }));
 
     return { files, totalCount };
   }

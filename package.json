@@ -1,36 +1,68 @@
 {
   "name": "git-work-grove",
   "displayName": "Git WorkGrove",
-  "description": "A code-workspace friendly worktree explorer for VS Code",
   "version": "0.6.0",
-  "publisher": "vdustr",
-  "license": "MIT",
-  "icon": "icon.png",
+  "description": "A code-workspace friendly worktree explorer for VS Code",
   "categories": [
     "SCM Providers"
   ],
   "keywords": [
-    "git",
-    "worktree",
-    "workspace",
     "code-workspace",
-    "source-control"
+    "git",
+    "source-control",
+    "workspace",
+    "worktree"
   ],
+  "homepage": "https://github.com/vp-tw/vscode-extension-git-work-grove#readme",
+  "bugs": {
+    "url": "https://github.com/vp-tw/vscode-extension-git-work-grove/issues"
+  },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/vp-tw/vscode-extension-git-work-grove.git"
   },
-  "bugs": {
-    "url": "https://github.com/vp-tw/vscode-extension-git-work-grove/issues"
-  },
-  "homepage": "https://github.com/vp-tw/vscode-extension-git-work-grove#readme",
   "qna": "marketplace",
-  "preview": true,
-  "engines": {
-    "vscode": "^1.95.0"
-  },
+  "publisher": "vdustr",
   "type": "module",
   "main": "./dist/extension.cjs",
+  "scripts": {
+    "build": "esbuild src/extension.ts --bundle --outfile=dist/extension.cjs --external:vscode --format=cjs --platform=node --minify --target=node20",
+    "build:dev": "esbuild src/extension.ts --bundle --outfile=dist/extension.cjs --external:vscode --format=cjs --platform=node --sourcemap --target=node20",
+    "lint:es": "eslint .",
+    "lint:es:dry": "eslint . --fix-dry-run",
+    "lint:oxfmt": "oxfmt --check .",
+    "lint:oxfmt:dry": "oxfmt .",
+    "local:install": "pnpm build && vsce package --no-dependencies -o git-work-grove.vsix && code --install-extension git-work-grove.vsix --force && rm git-work-grove.vsix",
+    "package": "vsce package --no-dependencies -o git-work-grove.vsix",
+    "prepublishOnly": "echo \"Error: Use 'pnpm release' to publish. Do not use npm publish.\" && exit 1",
+    "release": "pnpm build && pnpm package && vsce publish --packagePath git-work-grove.vsix && ovsx publish git-work-grove.vsix && rm -f git-work-grove.vsix",
+    "release:marketplace": "vsce publish --packagePath git-work-grove.vsix",
+    "release:ovsx": "ovsx publish git-work-grove.vsix",
+    "test": "vitest run",
+    "vscode:prepublish": "pnpm build",
+    "watch": "pnpm run build:dev --watch"
+  },
+  "dependencies": {
+    "shell-quote": "^1.8.3"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^7.4.3",
+    "@changesets/cli": "^2.29.8",
+    "@types/shell-quote": "^1.7.5",
+    "@types/vscode": "^1.95.0",
+    "@vp-tw/eslint-config": "latest",
+    "@vp-tw/tsconfig": "latest",
+    "@vscode/vsce": "latest",
+    "esbuild": "latest",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-package-json": "^0.88.3",
+    "ovsx": "^0.10.9",
+    "oxfmt": "0.64.0",
+    "typescript": "latest",
+    "vitest": "latest"
+  },
   "contributes": {
     "views": {
       "scm": [
@@ -512,25 +544,10 @@
       }
     }
   },
-  "scripts": {
-    "build": "esbuild src/extension.ts --bundle --outfile=dist/extension.cjs --external:vscode --format=cjs --platform=node --minify --target=node20",
-    "build:dev": "esbuild src/extension.ts --bundle --outfile=dist/extension.cjs --external:vscode --format=cjs --platform=node --sourcemap --target=node20",
-    "lint:es": "eslint .",
-    "lint:es:dry": "eslint . --fix-dry-run",
-    "lint:oxfmt": "oxfmt --check .",
-    "lint:oxfmt:dry": "oxfmt .",
-    "local:install": "pnpm build && vsce package --no-dependencies -o git-work-grove.vsix && code --install-extension git-work-grove.vsix --force && rm git-work-grove.vsix",
-    "package": "vsce package --no-dependencies -o git-work-grove.vsix",
-    "prepublishOnly": "echo \"Error: Use 'pnpm release' to publish. Do not use npm publish.\" && exit 1",
-    "release": "pnpm build && pnpm package && vsce publish --packagePath git-work-grove.vsix && ovsx publish git-work-grove.vsix && rm -f git-work-grove.vsix",
-    "release:marketplace": "vsce publish --packagePath git-work-grove.vsix",
-    "release:ovsx": "ovsx publish git-work-grove.vsix",
-    "test": "vitest run",
-    "vscode:prepublish": "pnpm build",
-    "watch": "pnpm run build:dev --watch"
-  },
-  "vsce": {
-    "dependencies": false
+  "icon": "icon.png",
+  "preview": true,
+  "engines": {
+    "vscode": "^1.95.0"
   },
   "packageManager": "pnpm@10.28.2",
   "pnpm": {
@@ -538,23 +555,7 @@
       "esbuild"
     ]
   },
-  "devDependencies": {
-    "@antfu/eslint-config": "^7.4.3",
-    "@changesets/cli": "^2.29.8",
-    "@types/shell-quote": "^1.7.5",
-    "@types/vscode": "^1.95.0",
-    "@vp-tw/eslint-config": "latest",
-    "@vp-tw/tsconfig": "latest",
-    "@vscode/vsce": "latest",
-    "esbuild": "latest",
-    "eslint": "^9.39.2",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-package-json": "^0.88.3",
-    "ovsx": "^0.10.9",
-    "typescript": "latest",
-    "vitest": "latest"
-  },
-  "dependencies": {
-    "shell-quote": "^1.8.3"
+  "vsce": {
+    "dependencies": false
   }
 }

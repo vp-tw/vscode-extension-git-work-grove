@@ -8,12 +8,12 @@ The "current" indicator (green icon + `●` badge) highlights the **single most 
 
 ## Four Cases
 
-| Case | VS Code has open | Current item | Parent item |
-|---|---|---|---|
-| **repo** | Main worktree folder (no `.code-workspace`) | Repository header | — |
-| **repo workspace** | `.code-workspace` under main worktree | WorkspaceFileItem | Repository header is NOT current |
-| **worktree** | Linked worktree folder (no `.code-workspace`) | WorktreeItem | — |
-| **worktree workspace** | `.code-workspace` under linked worktree | WorkspaceFileItem | WorktreeItem is NOT current |
+| Case                   | VS Code has open                              | Current item      | Parent item                      |
+| ---------------------- | --------------------------------------------- | ----------------- | -------------------------------- |
+| **repo**               | Main worktree folder (no `.code-workspace`)   | Repository header | —                                |
+| **repo workspace**     | `.code-workspace` under main worktree         | WorkspaceFileItem | Repository header is NOT current |
+| **worktree**           | Linked worktree folder (no `.code-workspace`) | WorktreeItem      | —                                |
+| **worktree workspace** | `.code-workspace` under linked worktree       | WorkspaceFileItem | WorktreeItem is NOT current      |
 
 ## Detection Logic
 
@@ -29,6 +29,7 @@ displayCurrent = worktree.isCurrent && workspaceFilePath === undefined
 ```
 
 A worktree (or repository header) shows current only when:
+
 1. VS Code is inside that worktree (`isCurrent === true`)
 2. No workspace file is open (`workspaceFilePath === undefined`)
 
@@ -46,11 +47,11 @@ A workspace file shows current when it is the exact file VS Code has open.
 
 When `displayCurrent` is `true`:
 
-| Effect | Source |
-|---|---|
-| Green icon tint | `new vscode.ThemeColor("terminal.ansiGreen")` on `ThemeIcon` |
-| `●` badge | `CurrentDecorationProvider` via `resourceUri` with `query: "current"` |
-| `.current` in `contextValue` | Enables current-specific menu items |
+| Effect                       | Source                                                                |
+| ---------------------------- | --------------------------------------------------------------------- |
+| Green icon tint              | `new vscode.ThemeColor("terminal.ansiGreen")` on `ThemeIcon`          |
+| `●` badge                    | `CurrentDecorationProvider` via `resourceUri` with `query: "current"` |
+| `.current` in `contextValue` | Enables current-specific menu items                                   |
 
 ## Favorites
 

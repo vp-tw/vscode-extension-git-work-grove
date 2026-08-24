@@ -6,21 +6,21 @@ User-defined commands that can be triggered from the tree view context menu, wit
 
 Two separate arrays — one for directory-level items (repository/worktree), one for workspace file items:
 
-| Setting | Applies to | Scope |
-|---|---|---|
+| Setting                                   | Applies to                                     | Scope      |
+| ----------------------------------------- | ---------------------------------------------- | ---------- |
 | `git-work-grove.customCommands.directory` | Repository, Worktree, Favorite (repo/worktree) | `resource` |
-| `git-work-grove.customCommands.workspace` | Workspace files, Favorite (workspace file) | `resource` |
+| `git-work-grove.customCommands.workspace` | Workspace files, Favorite (workspace file)     | `resource` |
 
 ### Item Schema
 
 Each entry in the array:
 
-| Property | Type | Required | Description |
-|---|---|---|---|
-| `label` | `string` | Yes | Display text in context menu and QuickPick |
-| `command` | `string[]` | Yes | Command as `[bin, ...args]` — supports template variables |
-| `env` | `Record<string, string>` | No | Environment variables — values support template variables |
-| `mode` | `"spawn" \| "terminal"` | No | Execution mode — `"spawn"` (default): detached background process. `"terminal"`: VS Code integrated terminal |
+| Property  | Type                     | Required | Description                                                                                                  |
+| --------- | ------------------------ | -------- | ------------------------------------------------------------------------------------------------------------ |
+| `label`   | `string`                 | Yes      | Display text in context menu and QuickPick                                                                   |
+| `command` | `string[]`               | Yes      | Command as `[bin, ...args]` — supports template variables                                                    |
+| `env`     | `Record<string, string>` | No       | Environment variables — values support template variables                                                    |
+| `mode`    | `"spawn" \| "terminal"`  | No       | Execution mode — `"spawn"` (default): detached background process. `"terminal"`: VS Code integrated terminal |
 
 ## Template Variables
 
@@ -28,34 +28,34 @@ Each entry in the array:
 
 Same variables as repository/worktree templates:
 
-| Variable | Value |
-|---|---|
-| `{name}` | Branch name, or `HEAD` if detached |
-| `{branch}` | Full branch name (empty if detached HEAD) |
-| `{ref}` | Branch name or short commit hash (always non-empty) |
-| `{head}` | Short commit hash (8 chars) |
-| `{path}` | Absolute worktree directory path |
+| Variable   | Value                                               |
+| ---------- | --------------------------------------------------- |
+| `{name}`   | Branch name, or `HEAD` if detached                  |
+| `{branch}` | Full branch name (empty if detached HEAD)           |
+| `{ref}`    | Branch name or short commit hash (always non-empty) |
+| `{head}`   | Short commit hash (8 chars)                         |
+| `{path}`   | Absolute worktree directory path                    |
 
 ### Workspace items (`customCommands.workspace`)
 
 Same variables as worktree workspace templates, plus `{dir}`:
 
-| Variable | Value |
-|---|---|
-| `{name}` | File name (without `.code-workspace` extension) |
-| `{branch}` | Parent worktree branch (empty if detached HEAD) |
-| `{ref}` | Branch name or short commit hash (always non-empty) |
-| `{head}` | Short commit hash (8 chars) |
-| `{path}` | Absolute workspace file path |
-| `{dir}` | Absolute parent directory of workspace file |
-| `{worktree}` | Parent worktree folder name |
+| Variable     | Value                                               |
+| ------------ | --------------------------------------------------- |
+| `{name}`     | File name (without `.code-workspace` extension)     |
+| `{branch}`   | Parent worktree branch (empty if detached HEAD)     |
+| `{ref}`      | Branch name or short commit hash (always non-empty) |
+| `{head}`     | Short commit hash (8 chars)                         |
+| `{path}`     | Absolute workspace file path                        |
+| `{dir}`      | Absolute parent directory of workspace file         |
+| `{worktree}` | Parent worktree folder name                         |
 
 Template syntax (fallback, conditional) is the same as display templates. See [templates.md](../../docs/templates.md) for syntax reference.
 
 ## Registered Commands
 
-| Command ID | Title | Enablement |
-|---|---|---|
+| Command ID                             | Title              | Enablement                   |
+| -------------------------------------- | ------------------ | ---------------------------- |
 | `gitWorkGrove.customCommand.directory` | Custom Commands... | `gitWorkGrove.hasRepository` |
 | `gitWorkGrove.customCommand.workspace` | Custom Commands... | `gitWorkGrove.hasRepository` |
 
@@ -63,15 +63,15 @@ Template syntax (fallback, conditional) is the same as display templates. See [t
 
 Both commands appear in the `custom@1` group, which renders after the copy group (`5_cutcopypaste`).
 
-| Command | When clause |
-|---|---|
+| Command                   | When clause                                                                                                       |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | `customCommand.directory` | `hasCustomCommands.directory` AND `viewItem` matches worktree/repository (excluding workspace files and prunable) |
-| `customCommand.workspace` | `hasCustomCommands.workspace` AND `viewItem` matches workspace file items (including favorites) |
+| `customCommand.workspace` | `hasCustomCommands.workspace` AND `viewItem` matches workspace file items (including favorites)                   |
 
 The menu items are only visible when the corresponding setting array is non-empty, controlled by context keys:
 
-| Context key | Set when |
-|---|---|
+| Context key                                | Set when                                                |
+| ------------------------------------------ | ------------------------------------------------------- |
 | `gitWorkGrove.hasCustomCommands.directory` | `customCommands.directory` has at least one valid entry |
 | `gitWorkGrove.hasCustomCommands.workspace` | `customCommands.workspace` has at least one valid entry |
 
@@ -112,11 +112,11 @@ When `mode` is `"terminal"`, the command runs in a VS Code integrated terminal i
 
 Same logic as Open in Terminal (see [open-in-terminal.md](open-in-terminal.md)):
 
-| Item type | CWD |
-|---|---|
-| Repository / Worktree | `worktreeInfo.path` |
-| Workspace file | `dirname(workspaceFileInfo.path)` |
-| Favorite | Resolved via duck-typing to the underlying type |
+| Item type             | CWD                                             |
+| --------------------- | ----------------------------------------------- |
+| Repository / Worktree | `worktreeInfo.path`                             |
+| Workspace file        | `dirname(workspaceFileInfo.path)`               |
+| Favorite              | Resolved via duck-typing to the underlying type |
 
 ## Error Handling
 
@@ -142,14 +142,14 @@ Same logic as Open in Terminal (see [open-in-terminal.md](open-in-terminal.md)):
 
 Common terminal emulators:
 
-| App | `command` |
-|-----|-----------|
-| Terminal.app | `["open", "-a", "Terminal", "{path}"]` |
-| iTerm2 | `["open", "-a", "iTerm", "{path}"]` |
-| Ghostty | `["open", "-a", "Ghostty", "--args", "--working-directory={path}", "--window-inherit-working-directory=false"]` |
-| WezTerm | `["wezterm", "start", "--cwd", "{path}"]` |
-| Alacritty | `["alacritty", "--working-directory", "{path}"]` |
-| Kitty | `["kitty", "--directory", "{path}"]` |
+| App          | `command`                                                                                                       |
+| ------------ | --------------------------------------------------------------------------------------------------------------- |
+| Terminal.app | `["open", "-a", "Terminal", "{path}"]`                                                                          |
+| iTerm2       | `["open", "-a", "iTerm", "{path}"]`                                                                             |
+| Ghostty      | `["open", "-a", "Ghostty", "--args", "--working-directory={path}", "--window-inherit-working-directory=false"]` |
+| WezTerm      | `["wezterm", "start", "--cwd", "{path}"]`                                                                       |
+| Alacritty    | `["alacritty", "--working-directory", "{path}"]`                                                                |
+| Kitty        | `["kitty", "--directory", "{path}"]`                                                                            |
 
 ### Open worktree directory in an external editor
 
