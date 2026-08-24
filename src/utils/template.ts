@@ -7,10 +7,7 @@ function get<T>(key: string, defaultValue: T): T {
   return vscode.workspace.getConfiguration().get<T>(key, defaultValue);
 }
 
-export function renderTemplate(
-  template: string,
-  vars: Record<string, string>,
-): string {
+export function renderTemplate(template: string, vars: Record<string, string>): string {
   let result = template;
 
   // Step 1: Conditional sections — {?key}content{/key}

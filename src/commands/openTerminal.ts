@@ -42,7 +42,9 @@ function resolveTerminalName(item: TreeActionableItem, ctx: ItemContext): string
 
   // WorktreeItem / GroupHeaderItem (repository)
   if ("worktreeInfo" in item && item.worktreeInfo) {
-    const template = item.worktreeInfo.isMain ? getRepositoryTerminalName() : getWorktreeTerminalName();
+    const template = item.worktreeInfo.isMain
+      ? getRepositoryTerminalName()
+      : getWorktreeTerminalName();
     return renderTemplate(template, ctx.vars);
   }
 

@@ -66,7 +66,6 @@ async function checkGitAndRepository(
   return { gitAvailable: true, hasRepository: cwd !== undefined };
 }
 
-
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   // Set initial context keys synchronously
   void setContext(CTX_HAS_REPOSITORY, false);
@@ -96,39 +95,39 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   // Commands
   context.subscriptions.push(
     vscode.commands.registerCommand(CMD_PRUNE_WORKTREES, () =>
-      pruneWorktrees(gitService, treeProvider)),
-    vscode.commands.registerCommand(CMD_OPEN_IN_NEW_WINDOW, (item) =>
-      openInNewWindow(item)),
+      pruneWorktrees(gitService, treeProvider),
+    ),
+    vscode.commands.registerCommand(CMD_OPEN_IN_NEW_WINDOW, (item) => openInNewWindow(item)),
     vscode.commands.registerCommand(CMD_OPEN_IN_CURRENT_WINDOW, (item) =>
-      openInCurrentWindow(item)),
-    vscode.commands.registerCommand(CMD_OPEN_IN_TERMINAL, (item) =>
-      openInTerminal(item)),
+      openInCurrentWindow(item),
+    ),
+    vscode.commands.registerCommand(CMD_OPEN_IN_TERMINAL, (item) => openInTerminal(item)),
     vscode.commands.registerCommand(CMD_ADD_FAVORITE, (item) =>
-      toggleFavorite(item, favorites, treeProvider)),
+      toggleFavorite(item, favorites, treeProvider),
+    ),
     vscode.commands.registerCommand(CMD_REMOVE_FAVORITE, (item) =>
-      toggleFavorite(item, favorites, treeProvider)),
+      toggleFavorite(item, favorites, treeProvider),
+    ),
     vscode.commands.registerCommand(CMD_MOVE_FAVORITE_UP, (item) =>
-      moveFavoriteUp(item, favorites, treeProvider)),
+      moveFavoriteUp(item, favorites, treeProvider),
+    ),
     vscode.commands.registerCommand(CMD_MOVE_FAVORITE_DOWN, (item) =>
-      moveFavoriteDown(item, favorites, treeProvider)),
-    vscode.commands.registerCommand(CMD_COPY_MISSING_PATH, (item) =>
-      copyPath(item)),
-    vscode.commands.registerCommand(CMD_COPY_NAME, (item) =>
-      copyName(item)),
-    vscode.commands.registerCommand(CMD_COPY_PATH, (item) =>
-      copyPath(item)),
+      moveFavoriteDown(item, favorites, treeProvider),
+    ),
+    vscode.commands.registerCommand(CMD_COPY_MISSING_PATH, (item) => copyPath(item)),
+    vscode.commands.registerCommand(CMD_COPY_NAME, (item) => copyName(item)),
+    vscode.commands.registerCommand(CMD_COPY_PATH, (item) => copyPath(item)),
     vscode.commands.registerCommand(CMD_COPY_WORKTREE_CONFIG_PATH, (item) =>
-      copyWorktreeConfigPath(item)),
+      copyWorktreeConfigPath(item),
+    ),
     vscode.commands.registerCommand(CMD_REVEAL_IN_OS, (item) => {
       const fsPath = item ? resolveItemPath(item) : undefined;
       if (fsPath) {
         void vscode.commands.executeCommand("revealFileInOS", vscode.Uri.file(fsPath));
       }
     }),
-    vscode.commands.registerCommand(CMD_REFRESH, () =>
-      treeProvider.refresh()),
-    vscode.commands.registerCommand(CMD_SHOW_OUTPUT, () =>
-      getOutputChannel().show()),
+    vscode.commands.registerCommand(CMD_REFRESH, () => treeProvider.refresh()),
+    vscode.commands.registerCommand(CMD_SHOW_OUTPUT, () => getOutputChannel().show()),
     vscode.commands.registerCommand(CMD_CLEAN_STALE_FAVORITES, async () => {
       const worktrees = await gitService.list();
       const validPaths = new Set<string>();
@@ -144,9 +143,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       await favorites.cleanupStale(validPaths);
     }),
     vscode.commands.registerCommand(CMD_CUSTOM_COMMAND_DIRECTORY, (item) =>
-      runCustomCommand(item, "directory")),
+      runCustomCommand(item, "directory"),
+    ),
     vscode.commands.registerCommand(CMD_CUSTOM_COMMAND_WORKSPACE, (item) =>
-      runCustomCommand(item, "workspace")),
+      runCustomCommand(item, "workspace"),
+    ),
   );
 
   // Tree item click → default open behavior
@@ -202,10 +203,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     if (commonDir) {
       const worktreesDir = path.join(commonDir, "worktrees");
       if (fs.existsSync(worktreesDir)) {
-        const pattern = new vscode.RelativePattern(
-          vscode.Uri.file(commonDir),
-          "worktrees/**",
-        );
+        const pattern = new vscode.RelativePattern(vscode.Uri.file(commonDir), "worktrees/**");
         const watcher = vscode.workspace.createFileSystemWatcher(pattern);
         const debouncedRefresh = () => treeProvider.debouncedRefresh();
         watcher.onDidChange(debouncedRefresh);

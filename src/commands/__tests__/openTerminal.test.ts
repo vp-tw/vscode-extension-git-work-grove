@@ -81,7 +81,12 @@ describe("openInTerminal", () => {
     });
 
     it("opens terminal for repository (main worktree)", () => {
-      const info = makeWorktreeInfo({ isMain: true, name: "my-project", path: "/repo/main", branch: "main" });
+      const info = makeWorktreeInfo({
+        isMain: true,
+        name: "my-project",
+        path: "/repo/main",
+        branch: "main",
+      });
       openInTerminal({ worktreeInfo: info });
 
       expect(mockExistsSync).toHaveBeenCalledWith("/repo/main");
@@ -193,7 +198,12 @@ describe("openInTerminal", () => {
 
   describe("groupHeaderItem (repository)", () => {
     it("opens terminal using worktreeInfo for group header", () => {
-      const info = makeWorktreeInfo({ isMain: true, name: "my-project", path: "/repo/main", branch: "main" });
+      const info = makeWorktreeInfo({
+        isMain: true,
+        name: "my-project",
+        path: "/repo/main",
+        branch: "main",
+      });
       openInTerminal({ worktreeInfo: info });
 
       expect(mockExistsSync).toHaveBeenCalledWith("/repo/main");

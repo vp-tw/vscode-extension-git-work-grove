@@ -13,10 +13,7 @@ const { workspaceFileVars } = await import("../template.js");
 // Step 1: Conditional sections — {?key}content{/key}
 // Step 2: Variables with fallback — {key|fallback}
 // Step 3: Simple variables — {key}
-function renderTemplate(
-  template: string,
-  vars: Record<string, string>,
-): string {
+function renderTemplate(template: string, vars: Record<string, string>): string {
   let result = template;
 
   result = result.replace(/\{\?(\w+)\}([\s\S]*?)\{\/\1\}/g, (_, key, content) => {
@@ -41,8 +38,9 @@ describe("renderTemplate", () => {
     });
 
     it("replaces multiple different variables", () => {
-      expect(renderTemplate("{name} ({branch})", { name: "feat-auth", branch: "feat/auth" }))
-        .toBe("feat-auth (feat/auth)");
+      expect(renderTemplate("{name} ({branch})", { name: "feat-auth", branch: "feat/auth" })).toBe(
+        "feat-auth (feat/auth)",
+      );
     });
 
     it("replaces repeated occurrences of the same variable", () => {
@@ -54,8 +52,9 @@ describe("renderTemplate", () => {
     });
 
     it("replaces with empty string when variable value is empty", () => {
-      expect(renderTemplate("{name} ({branch})", { name: "feat-auth", branch: "" }))
-        .toBe("feat-auth ()");
+      expect(renderTemplate("{name} ({branch})", { name: "feat-auth", branch: "" })).toBe(
+        "feat-auth ()",
+      );
     });
 
     it("returns template as-is when no vars provided", () => {
@@ -85,8 +84,9 @@ describe("renderTemplate", () => {
     });
 
     it("works alongside simple variables", () => {
-      expect(renderTemplate("{name} ({branch|no branch})", { name: "feat-auth", branch: "" }))
-        .toBe("feat-auth (no branch)");
+      expect(renderTemplate("{name} ({branch|no branch})", { name: "feat-auth", branch: "" })).toBe(
+        "feat-auth (no branch)",
+      );
     });
 
     it("handles multiple fallbacks in one template", () => {
@@ -96,28 +96,30 @@ describe("renderTemplate", () => {
 
   describe("conditional sections {?key}...{/key}", () => {
     it("keeps content when variable is non-empty", () => {
-      expect(renderTemplate("{?branch}({branch}){/branch}", { branch: "main" }))
-        .toBe("(main)");
+      expect(renderTemplate("{?branch}({branch}){/branch}", { branch: "main" })).toBe("(main)");
     });
 
     it("removes entire section when variable is empty", () => {
-      expect(renderTemplate("{?branch}({branch}){/branch}", { branch: "" }))
-        .toBe("");
+      expect(renderTemplate("{?branch}({branch}){/branch}", { branch: "" })).toBe("");
     });
 
     it("removes entire section when variable is not in vars", () => {
-      expect(renderTemplate("{?branch}({branch}){/branch}", {}))
-        .toBe("");
+      expect(renderTemplate("{?branch}({branch}){/branch}", {})).toBe("");
     });
 
     it("processes inner variables after conditional", () => {
-      expect(renderTemplate("{name}{?branch} ({branch}){/branch}", { name: "feat-auth", branch: "main" }))
-        .toBe("feat-auth (main)");
+      expect(
+        renderTemplate("{name}{?branch} ({branch}){/branch}", {
+          name: "feat-auth",
+          branch: "main",
+        }),
+      ).toBe("feat-auth (main)");
     });
 
     it("leaves other content intact when section is removed", () => {
-      expect(renderTemplate("{name}{?branch} ({branch}){/branch}", { name: "feat-auth", branch: "" }))
-        .toBe("feat-auth");
+      expect(
+        renderTemplate("{name}{?branch} ({branch}){/branch}", { name: "feat-auth", branch: "" }),
+      ).toBe("feat-auth");
     });
 
     it("handles multiple conditional sections", () => {
@@ -129,69 +131,77 @@ describe("renderTemplate", () => {
     });
 
     it("handles nested content with different variables", () => {
-      expect(renderTemplate("{?branch}{name} on {branch}{/branch}", { name: "foo", branch: "main" }))
-        .toBe("foo on main");
+      expect(
+        renderTemplate("{?branch}{name} on {branch}{/branch}", { name: "foo", branch: "main" }),
+      ).toBe("foo on main");
     });
   });
 
   describe("combined syntax", () => {
     it("conditional + simple variables", () => {
-      expect(renderTemplate("{name}{?branch} ({branch}){/branch} [{head}]", {
-        name: "feat-auth",
-        branch: "feat/auth",
-        head: "abc12345",
-      })).toBe("feat-auth (feat/auth) [abc12345]");
+      expect(
+        renderTemplate("{name}{?branch} ({branch}){/branch} [{head}]", {
+          name: "feat-auth",
+          branch: "feat/auth",
+          head: "abc12345",
+        }),
+      ).toBe("feat-auth (feat/auth) [abc12345]");
     });
 
     it("conditional removed + simple variables", () => {
-      expect(renderTemplate("{name}{?branch} ({branch}){/branch} [{head}]", {
-        name: "feat-auth",
-        branch: "",
-        head: "abc12345",
-      })).toBe("feat-auth [abc12345]");
+      expect(
+        renderTemplate("{name}{?branch} ({branch}){/branch} [{head}]", {
+          name: "feat-auth",
+          branch: "",
+          head: "abc12345",
+        }),
+      ).toBe("feat-auth [abc12345]");
     });
 
     it("fallback + simple variables", () => {
-      expect(renderTemplate("{name} ({branch|{head}})", {
-        name: "feat-auth",
-        branch: "",
-        head: "abc12345",
-      })).toBe("feat-auth (abc12345)");
+      expect(
+        renderTemplate("{name} ({branch|{head}})", {
+          name: "feat-auth",
+          branch: "",
+          head: "abc12345",
+        }),
+      ).toBe("feat-auth (abc12345)");
     });
 
     it("all three syntaxes together", () => {
       const tpl = "{name}{?branch} ({branch}){/branch} [{ref|unknown}]";
-      expect(renderTemplate(tpl, { name: "wt", branch: "main", ref: "main" }))
-        .toBe("wt (main) [main]");
-      expect(renderTemplate(tpl, { name: "wt", branch: "", ref: "" }))
-        .toBe("wt [unknown]");
+      expect(renderTemplate(tpl, { name: "wt", branch: "main", ref: "main" })).toBe(
+        "wt (main) [main]",
+      );
+      expect(renderTemplate(tpl, { name: "wt", branch: "", ref: "" })).toBe("wt [unknown]");
     });
   });
 
   describe("processing order", () => {
     it("conditionals are processed before fallbacks", () => {
       // Conditional removes section, then fallback doesn't see it
-      expect(renderTemplate("{?branch}{branch|x}{/branch}", { branch: "" }))
-        .toBe("");
+      expect(renderTemplate("{?branch}{branch|x}{/branch}", { branch: "" })).toBe("");
     });
 
     it("conditionals are processed before simple variables", () => {
       // Variables inside kept conditionals are still resolved
-      expect(renderTemplate("{?branch}[{branch}]{/branch}", { branch: "main" }))
-        .toBe("[main]");
+      expect(renderTemplate("{?branch}[{branch}]{/branch}", { branch: "main" })).toBe("[main]");
     });
 
     it("fallbacks are processed before simple variables", () => {
       // {head} in fallback text is resolved as simple variable
-      expect(renderTemplate("{branch|{head}}", { branch: "", head: "abc" }))
-        .toBe("abc");
+      expect(renderTemplate("{branch|{head}}", { branch: "", head: "abc" })).toBe("abc");
     });
   });
 });
 
 describe("workspaceFileVars", () => {
   it("includes dir variable as parent directory of filePath", () => {
-    const vars = workspaceFileVars("my-workspace", "/repo/worktrees/feature/my-workspace.code-workspace", undefined);
+    const vars = workspaceFileVars(
+      "my-workspace",
+      "/repo/worktrees/feature/my-workspace.code-workspace",
+      undefined,
+    );
     expect(vars.dir).toBe("/repo/worktrees/feature");
   });
 });

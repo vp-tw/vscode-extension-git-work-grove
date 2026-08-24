@@ -31,10 +31,10 @@ Directory missing — run Prune to clean up
 
 Examples:
 
-| Full path | Abbreviated |
-|-----------|-------------|
+| Full path                                                | Abbreviated                        |
+| -------------------------------------------------------- | ---------------------------------- |
 | `/Users/v/repo/vp-tw/main-repo/.git/worktrees/wt-hotfix` | `~/r/v/m/.git/worktrees/wt-hotfix` |
-| `/tmp/grove-test/main-repo/.git/worktrees/wt-hotfix` | `/t/g/m/.git/worktrees/wt-hotfix` |
+| `/tmp/grove-test/main-repo/.git/worktrees/wt-hotfix`     | `/t/g/m/.git/worktrees/wt-hotfix`  |
 
 ### Data Sources
 
@@ -48,10 +48,10 @@ Examples:
 
 Only these items appear for prunable worktrees:
 
-| Command | Group | Purpose |
-|---------|-------|---------|
-| Copy Name | `5_cutcopypaste@1` | Branch name for recreating |
-| Copy Path (Missing) | `5_cutcopypaste@2` | Original expected worktree path |
+| Command                   | Group              | Purpose                           |
+| ------------------------- | ------------------ | --------------------------------- |
+| Copy Name                 | `5_cutcopypaste@1` | Branch name for recreating        |
+| Copy Path (Missing)       | `5_cutcopypaste@2` | Original expected worktree path   |
 | Copy Worktree Config Path | `5_cutcopypaste@3` | Git internal directory (absolute) |
 
 ### Hidden for Prunable
@@ -89,15 +89,15 @@ CMD_COPY_WORKTREE_CONFIG_PATH = "gitWorkGrove.copyWorktreeConfigPath"
 
 ### Files to Modify
 
-| File | Change |
-|------|--------|
-| `src/constants.ts` | Add 2 command IDs |
-| `src/utils/tooltip.ts` | Add fish-style abbreviation, add config path + expected path lines for prunable |
-| `src/utils/fishPath.ts` | **New file** — fish-style path abbreviation utility |
-| `src/extension.ts` | Register 2 new commands |
-| `src/commands/copyInfo.ts` | Add `copyWorktreeConfigPath` handler; `copyMissingPath` reuses `copyPath` |
-| `package.json` | Add 2 commands, update `when` clauses for prunable exclusion, add new menu entries |
-| `docs/spec/commands.md` | Document new commands and prunable menu behavior |
+| File                       | Change                                                                             |
+| -------------------------- | ---------------------------------------------------------------------------------- |
+| `src/constants.ts`         | Add 2 command IDs                                                                  |
+| `src/utils/tooltip.ts`     | Add fish-style abbreviation, add config path + expected path lines for prunable    |
+| `src/utils/fishPath.ts`    | **New file** — fish-style path abbreviation utility                                |
+| `src/extension.ts`         | Register 2 new commands                                                            |
+| `src/commands/copyInfo.ts` | Add `copyWorktreeConfigPath` handler; `copyMissingPath` reuses `copyPath`          |
+| `package.json`             | Add 2 commands, update `when` clauses for prunable exclusion, add new menu entries |
+| `docs/spec/commands.md`    | Document new commands and prunable menu behavior                                   |
 
 ### Not in Scope
 

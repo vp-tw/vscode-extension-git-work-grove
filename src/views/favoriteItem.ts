@@ -19,9 +19,7 @@ import { buildTooltip } from "../utils/tooltip.js";
 import { buildResourceUri } from "./currentDecorationProvider.js";
 
 function isPrunable(resolved: ResolvedFavorite): boolean {
-  return resolved.worktreeInfo?.isPrunable
-    ?? resolved.parentWorktreeInfo?.isPrunable
-    ?? false;
+  return resolved.worktreeInfo?.isPrunable ?? resolved.parentWorktreeInfo?.isPrunable ?? false;
 }
 
 function getIcon(resolved: ResolvedFavorite): vscode.ThemeIcon {
@@ -29,9 +27,7 @@ function getIcon(resolved: ResolvedFavorite): vscode.ThemeIcon {
     return new vscode.ThemeIcon("warning");
   }
 
-  const color = resolved.isCurrent
-    ? new vscode.ThemeColor("terminal.ansiGreen")
-    : undefined;
+  const color = resolved.isCurrent ? new vscode.ThemeColor("terminal.ansiGreen") : undefined;
 
   switch (resolved.type) {
     case "repo":
@@ -57,7 +53,11 @@ function buildLabel(resolved: ResolvedFavorite): string {
     case "worktree":
       return renderTemplate(getFavoriteWorktreeLabel(), worktreeVars(resolved.worktreeInfo!));
     case "workspaceFile": {
-      const vars = workspaceFileVars(resolved.displayName, resolved.path, resolved.parentWorktreeInfo);
+      const vars = workspaceFileVars(
+        resolved.displayName,
+        resolved.path,
+        resolved.parentWorktreeInfo,
+      );
       const template = resolved.parentWorktreeInfo?.isMain
         ? getFavoriteRepositoryWorkspaceLabel()
         : getFavoriteWorktreeWorkspaceLabel();
@@ -69,11 +69,18 @@ function buildLabel(resolved: ResolvedFavorite): string {
 function buildDescription(resolved: ResolvedFavorite): string {
   switch (resolved.type) {
     case "repo":
-      return renderTemplate(getFavoriteRepositoryDescription(), worktreeVars(resolved.worktreeInfo!));
+      return renderTemplate(
+        getFavoriteRepositoryDescription(),
+        worktreeVars(resolved.worktreeInfo!),
+      );
     case "worktree":
       return renderTemplate(getFavoriteWorktreeDescription(), worktreeVars(resolved.worktreeInfo!));
     case "workspaceFile": {
-      const vars = workspaceFileVars(resolved.displayName, resolved.path, resolved.parentWorktreeInfo);
+      const vars = workspaceFileVars(
+        resolved.displayName,
+        resolved.path,
+        resolved.parentWorktreeInfo,
+      );
       const template = resolved.parentWorktreeInfo?.isMain
         ? getFavoriteRepositoryWorkspaceDescription()
         : getFavoriteWorktreeWorkspaceDescription();

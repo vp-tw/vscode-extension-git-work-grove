@@ -4,20 +4,20 @@ Opens a new VS Code terminal at the item's filesystem location.
 
 ## Command
 
-| Command ID | Title | Icon |
-|---|---|---|
+| Command ID                    | Title            | Icon          |
+| ----------------------------- | ---------------- | ------------- |
 | `gitWorkGrove.openInTerminal` | Open in Terminal | `$(terminal)` |
 
 ## CWD Resolution
 
 The working directory depends on the item type:
 
-| Item type | CWD |
-|---|---|
-| `GroupHeaderItem` (repository) | `worktreeInfo.path` |
-| `WorktreeItem` | `worktreeInfo.path` |
-| `WorkspaceFileItem` | `dirname(workspaceFileInfo.path)` |
-| `FavoriteItem` | Resolved via duck-typing (see detection order below) |
+| Item type                      | CWD                                                  |
+| ------------------------------ | ---------------------------------------------------- |
+| `GroupHeaderItem` (repository) | `worktreeInfo.path`                                  |
+| `WorktreeItem`                 | `worktreeInfo.path`                                  |
+| `WorkspaceFileItem`            | `dirname(workspaceFileInfo.path)`                    |
+| `FavoriteItem`                 | Resolved via duck-typing (see detection order below) |
 
 ### Detection Order (duck-typing)
 
@@ -31,21 +31,21 @@ Same order as `resolveUri` in `open-behavior.md`:
 
 The terminal name is rendered from `template.*.terminalName` settings. Only 4 templates exist (one per non-favorite type). Favorites reuse the corresponding non-favorite template.
 
-| Item type | Template setting |
-|---|---|
-| Repository | `template.repository.terminalName` |
-| Worktree | `template.worktree.terminalName` |
+| Item type            | Template setting                            |
+| -------------------- | ------------------------------------------- |
+| Repository           | `template.repository.terminalName`          |
+| Worktree             | `template.worktree.terminalName`            |
 | Repository Workspace | `template.repositoryWorkspace.terminalName` |
-| Worktree Workspace | `template.worktreeWorkspace.terminalName` |
+| Worktree Workspace   | `template.worktreeWorkspace.terminalName`   |
 
 ### Defaults
 
-| Setting | Default |
-|---|---|
-| `template.repository.terminalName` | `{ref}` |
-| `template.worktree.terminalName` | `{ref}` |
-| `template.repositoryWorkspace.terminalName` | `{name}` |
-| `template.worktreeWorkspace.terminalName` | `{name} ({ref})` |
+| Setting                                     | Default          |
+| ------------------------------------------- | ---------------- |
+| `template.repository.terminalName`          | `{ref}`          |
+| `template.worktree.terminalName`            | `{ref}`          |
+| `template.repositoryWorkspace.terminalName` | `{name}`         |
+| `template.worktreeWorkspace.terminalName`   | `{name} ({ref})` |
 
 Templates use the same variables and syntax as label/description templates. See [templates.md](templates.md) for variable reference.
 

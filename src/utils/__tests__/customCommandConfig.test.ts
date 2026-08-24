@@ -12,7 +12,9 @@ describe("validateCustomCommand", () => {
   });
 
   it("returns true for valid config with env", () => {
-    expect(validateCustomCommand({ label: "Test", command: ["echo"], env: { FOO: "bar" } })).toBe(true);
+    expect(validateCustomCommand({ label: "Test", command: ["echo"], env: { FOO: "bar" } })).toBe(
+      true,
+    );
   });
 
   it("returns false when label is missing", () => {
@@ -56,7 +58,9 @@ describe("validateCustomCommand", () => {
   });
 
   it("returns false when env values are not strings", () => {
-    expect(validateCustomCommand({ label: "Test", command: ["echo"], env: { FOO: 123 } })).toBe(false);
+    expect(validateCustomCommand({ label: "Test", command: ["echo"], env: { FOO: 123 } })).toBe(
+      false,
+    );
   });
 
   it("returns true when env is omitted", () => {
@@ -68,7 +72,9 @@ describe("validateCustomCommand", () => {
   });
 
   it("returns true when mode is 'terminal'", () => {
-    expect(validateCustomCommand({ label: "Test", command: ["echo"], mode: "terminal" })).toBe(true);
+    expect(validateCustomCommand({ label: "Test", command: ["echo"], mode: "terminal" })).toBe(
+      true,
+    );
   });
 
   it("returns true when mode is omitted", () => {
@@ -76,6 +82,8 @@ describe("validateCustomCommand", () => {
   });
 
   it("returns false when mode is invalid", () => {
-    expect(validateCustomCommand({ label: "Test", command: ["echo"], mode: "invalid" })).toBe(false);
+    expect(validateCustomCommand({ label: "Test", command: ["echo"], mode: "invalid" })).toBe(
+      false,
+    );
   });
 });

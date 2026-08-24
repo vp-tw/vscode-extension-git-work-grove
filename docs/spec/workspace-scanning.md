@@ -12,10 +12,10 @@ Workspace scanning discovers `.code-workspace` files within worktree directories
 
 ### Settings
 
-| Setting | Type | Default | Description |
-|---|---|---|---|
+| Setting                                | Type       | Default                | Description                     |
+| -------------------------------------- | ---------- | ---------------------- | ------------------------------- |
 | `git-work-grove.workspaceFile.include` | `string[]` | `["*.code-workspace"]` | Glob patterns for file matching |
-| `git-work-grove.workspaceFile.exclude` | `string[]` | `[]` | Glob patterns to exclude |
+| `git-work-grove.workspaceFile.exclude` | `string[]` | `[]`                   | Glob patterns to exclude        |
 
 ### Pattern Matching
 
@@ -27,6 +27,7 @@ Simple glob matching (NOT full glob):
 - No `{a,b}` brace expansion
 
 A file is included when:
+
 1. It is a regular file (not a directory, symlink, etc.)
 2. It matches at least one include pattern
 3. It does NOT match any exclude pattern
@@ -54,8 +55,8 @@ Where `WorkspaceFileInfo`:
 
 ```typescript
 {
-  name: string;  // filename without .code-workspace extension
-  path: string;  // absolute path to the file
+  name: string; // filename without .code-workspace extension
+  path: string; // absolute path to the file
 }
 ```
 

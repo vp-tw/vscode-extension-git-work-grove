@@ -39,7 +39,7 @@ vi.mock("node:child_process", () => ({
 
 vi.mock("shell-quote", () => ({
   quote: (args: Array<string>) =>
-    args.map(arg => (arg.includes(" ") ? `'${arg}'` : arg)).join(" "),
+    args.map((arg) => (arg.includes(" ") ? `'${arg}'` : arg)).join(" "),
 }));
 
 const mockResolveItemContext = vi.fn(() => ({
@@ -70,7 +70,18 @@ const { logError } = await import("../../utils/outputChannel.js");
 // --- Helpers ---
 
 function makeItem() {
-  return { worktreeInfo: { branch: "feat", head: "abc123", isDetached: false, isCurrent: false, isMain: false, isPrunable: false, name: "feat", path: "/repo/feat" } } as const;
+  return {
+    worktreeInfo: {
+      branch: "feat",
+      head: "abc123",
+      isDetached: false,
+      isCurrent: false,
+      isMain: false,
+      isPrunable: false,
+      name: "feat",
+      path: "/repo/feat",
+    },
+  } as const;
 }
 
 // --- Tests ---

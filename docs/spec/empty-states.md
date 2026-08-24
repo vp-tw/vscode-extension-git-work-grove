@@ -6,11 +6,11 @@ The WorkGrove tree view displays contextual messages when it cannot show worktre
 
 The tree view has 3 possible empty states, checked in priority order:
 
-| Priority | State | Condition | Message |
-|---|---|---|---|
-| 1 | Git unavailable | `git --version` fails or times out | "Git is not available.\n[Learn More](https://git-scm.com)" |
-| 2 | No repository | Git works but no `.git` found in workspace | "No git repository found in the current workspace." |
-| 3 | No worktrees | Repository exists but `git worktree list` returns only the main worktree with no workspace files | "No worktrees found." |
+| Priority | State           | Condition                                                                                        | Message                                                    |
+| -------- | --------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| 1        | Git unavailable | `git --version` fails or times out                                                               | "Git is not available.\n[Learn More](https://git-scm.com)" |
+| 2        | No repository   | Git works but no `.git` found in workspace                                                       | "No git repository found in the current workspace."        |
+| 3        | No worktrees    | Repository exists but `git worktree list` returns only the main worktree with no workspace files | "No worktrees found."                                      |
 
 ## View Visibility
 
@@ -28,10 +28,10 @@ The "No repository" message is a safety net for edge cases (e.g., VS Code's Git 
 
 ## Context Keys
 
-| Key | Type | Set when |
-|---|---|---|
-| `gitWorkGrove.gitUnavailable` | boolean | `git --version` fails or times out (5s) |
-| `gitWorkGrove.hasRepository` | boolean | Git is available AND `.git` found in workspace folders |
+| Key                           | Type    | Set when                                               |
+| ----------------------------- | ------- | ------------------------------------------------------ |
+| `gitWorkGrove.gitUnavailable` | boolean | `git --version` fails or times out (5s)                |
+| `gitWorkGrove.hasRepository`  | boolean | Git is available AND `.git` found in workspace folders |
 
 Initial values (set synchronously at activation): both `false`.
 
@@ -39,11 +39,11 @@ Initial values (set synchronously at activation): both `false`.
 
 Each welcome message has a `when` clause that ensures only one message shows at a time:
 
-| Message | `when` clause |
-|---|---|
-| Git unavailable | `gitWorkGrove.gitUnavailable` |
-| No repository | `!gitWorkGrove.gitUnavailable && !gitWorkGrove.hasRepository` |
-| No worktrees | `gitWorkGrove.hasRepository` |
+| Message         | `when` clause                                                 |
+| --------------- | ------------------------------------------------------------- |
+| Git unavailable | `gitWorkGrove.gitUnavailable`                                 |
+| No repository   | `!gitWorkGrove.gitUnavailable && !gitWorkGrove.hasRepository` |
+| No worktrees    | `gitWorkGrove.hasRepository`                                  |
 
 The priority order is enforced by the `when` clauses — only one message is visible at any time.
 
@@ -90,8 +90,8 @@ This appears when the tree provider returns an empty array. In practice this is 
 
 Each empty state logs a message to the "Git WorkGrove" output channel:
 
-| State | Log message |
-|---|---|
-| Git unavailable | `Git is not available` |
-| No repository | `No git repository found in workspace folders` |
-| No worktrees | *(no explicit log — tree simply returns empty)* |
+| State           | Log message                                     |
+| --------------- | ----------------------------------------------- |
+| Git unavailable | `Git is not available`                          |
+| No repository   | `No git repository found in workspace folders`  |
+| No worktrees    | _(no explicit log — tree simply returns empty)_ |

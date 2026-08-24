@@ -11,7 +11,11 @@ import {
 import { buildTooltip } from "../utils/tooltip.js";
 import { buildResourceUri } from "./currentDecorationProvider.js";
 
-function buildContextValue(info: WorktreeInfo, isFavorite: boolean, displayCurrent: boolean): string {
+function buildContextValue(
+  info: WorktreeInfo,
+  isFavorite: boolean,
+  displayCurrent: boolean,
+): string {
   const parts = ["worktree"];
   if (info.isMain) parts.push("main");
   if (displayCurrent) parts.push("current");
@@ -31,15 +35,15 @@ function getIcon(info: WorktreeInfo, displayCurrent: boolean): vscode.ThemeIcon 
     return new vscode.ThemeIcon("repo");
   }
   if (displayCurrent) {
-    return new vscode.ThemeIcon(
-      "worktree",
-      new vscode.ThemeColor("terminal.ansiGreen"),
-    );
+    return new vscode.ThemeIcon("worktree", new vscode.ThemeColor("terminal.ansiGreen"));
   }
   return new vscode.ThemeIcon("worktree");
 }
 
-function collapsibleState(info: WorktreeInfo, hasChildren: boolean): vscode.TreeItemCollapsibleState {
+function collapsibleState(
+  info: WorktreeInfo,
+  hasChildren: boolean,
+): vscode.TreeItemCollapsibleState {
   if (!hasChildren) return vscode.TreeItemCollapsibleState.None;
   return info.isCurrent
     ? vscode.TreeItemCollapsibleState.Expanded
@@ -49,7 +53,12 @@ function collapsibleState(info: WorktreeInfo, hasChildren: boolean): vscode.Tree
 export class WorktreeItem extends vscode.TreeItem {
   readonly worktreeInfo: WorktreeInfo;
 
-  constructor(info: WorktreeInfo, isFavorite: boolean, showCurrentIndicator?: boolean, hasChildren = true) {
+  constructor(
+    info: WorktreeInfo,
+    isFavorite: boolean,
+    showCurrentIndicator?: boolean,
+    hasChildren = true,
+  ) {
     const displayCurrent = showCurrentIndicator ?? info.isCurrent;
     const vars = worktreeVars(info);
     super(renderTemplate(getWorktreeLabel(), vars), collapsibleState(info, hasChildren));

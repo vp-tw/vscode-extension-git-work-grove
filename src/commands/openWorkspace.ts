@@ -39,7 +39,11 @@ async function askAndOpen(item: OpenableItem, uri: vscode.Uri): Promise<void> {
   await openWithBehavior(item, uri, pick.behavior);
 }
 
-async function openWithBehavior(item: OpenableItem, uri: vscode.Uri, behavior: OpenBehavior): Promise<void> {
+async function openWithBehavior(
+  item: OpenableItem,
+  uri: vscode.Uri,
+  behavior: OpenBehavior,
+): Promise<void> {
   switch (behavior) {
     case "ask":
       await askAndOpen(item, uri);

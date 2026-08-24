@@ -4,56 +4,56 @@ All commands use the `gitWorkGrove.*` prefix.
 
 ## Command Registry
 
-| Command ID | Title | Icon | Enablement |
-|---|---|---|---|
-| `pruneWorktrees` | Prune Worktrees | — | `gitWorkGrove.hasRepository` |
-| `openInNewWindow` | Open in New Window | `$(link-external)` | `gitWorkGrove.hasRepository` |
-| `openInCurrentWindow` | Open in Current Window | `$(window)` | `gitWorkGrove.hasRepository` |
-| `addFavorite` | Add Favorite | `$(star-empty)` | `gitWorkGrove.hasRepository` |
-| `removeFavorite` | Remove Favorite | `$(star-full)` | `gitWorkGrove.hasRepository` |
-| `moveFavoriteUp` | Move Favorite Up | `$(chevron-up)` | `gitWorkGrove.hasRepository` |
-| `moveFavoriteDown` | Move Favorite Down | `$(chevron-down)` | `gitWorkGrove.hasRepository` |
-| `copyMissingPath` | Copy Path (Missing) | — | `gitWorkGrove.hasRepository` |
-| `copyName` | Copy Name | — | `gitWorkGrove.hasRepository` |
-| `copyPath` | Copy Path | — | `gitWorkGrove.hasRepository` |
-| `copyWorktreeConfigPath` | Copy Worktree Config Path | — | `gitWorkGrove.hasRepository` |
-| `openInTerminal` | Open in Terminal | `$(terminal)` | `gitWorkGrove.hasRepository` |
-| `customCommand.directory` | Custom Commands... | — | `gitWorkGrove.hasRepository` |
-| `customCommand.workspace` | Custom Commands... | — | `gitWorkGrove.hasRepository` |
-| `revealInOS` | Reveal in Finder | — | `gitWorkGrove.hasRepository` |
-| `refresh` | Refresh | `$(refresh)` | `gitWorkGrove.hasRepository` |
-| `showOutput` | Show Output | — | *(always)* |
-| `cleanStaleFavorites` | Clean Stale Favorites | — | `gitWorkGrove.hasRepository` |
+| Command ID                | Title                     | Icon               | Enablement                   |
+| ------------------------- | ------------------------- | ------------------ | ---------------------------- |
+| `pruneWorktrees`          | Prune Worktrees           | —                  | `gitWorkGrove.hasRepository` |
+| `openInNewWindow`         | Open in New Window        | `$(link-external)` | `gitWorkGrove.hasRepository` |
+| `openInCurrentWindow`     | Open in Current Window    | `$(window)`        | `gitWorkGrove.hasRepository` |
+| `addFavorite`             | Add Favorite              | `$(star-empty)`    | `gitWorkGrove.hasRepository` |
+| `removeFavorite`          | Remove Favorite           | `$(star-full)`     | `gitWorkGrove.hasRepository` |
+| `moveFavoriteUp`          | Move Favorite Up          | `$(chevron-up)`    | `gitWorkGrove.hasRepository` |
+| `moveFavoriteDown`        | Move Favorite Down        | `$(chevron-down)`  | `gitWorkGrove.hasRepository` |
+| `copyMissingPath`         | Copy Path (Missing)       | —                  | `gitWorkGrove.hasRepository` |
+| `copyName`                | Copy Name                 | —                  | `gitWorkGrove.hasRepository` |
+| `copyPath`                | Copy Path                 | —                  | `gitWorkGrove.hasRepository` |
+| `copyWorktreeConfigPath`  | Copy Worktree Config Path | —                  | `gitWorkGrove.hasRepository` |
+| `openInTerminal`          | Open in Terminal          | `$(terminal)`      | `gitWorkGrove.hasRepository` |
+| `customCommand.directory` | Custom Commands...        | —                  | `gitWorkGrove.hasRepository` |
+| `customCommand.workspace` | Custom Commands...        | —                  | `gitWorkGrove.hasRepository` |
+| `revealInOS`              | Reveal in Finder          | —                  | `gitWorkGrove.hasRepository` |
+| `refresh`                 | Refresh                   | `$(refresh)`       | `gitWorkGrove.hasRepository` |
+| `showOutput`              | Show Output               | —                  | _(always)_                   |
+| `cleanStaleFavorites`     | Clean Stale Favorites     | —                  | `gitWorkGrove.hasRepository` |
 
 ## Menu Placement
 
 ### View Title (`view/title`)
 
-| Command | Group | When |
-|---|---|---|
-| `refresh` | `navigation@1` | `view == gitWorkGrove.worktrees` |
-| `pruneWorktrees` | `overflow@1` | `view == gitWorkGrove.worktrees` |
-| `cleanStaleFavorites` | `overflow@2` | `view == gitWorkGrove.worktrees` |
+| Command               | Group          | When                             |
+| --------------------- | -------------- | -------------------------------- |
+| `refresh`             | `navigation@1` | `view == gitWorkGrove.worktrees` |
+| `pruneWorktrees`      | `overflow@1`   | `view == gitWorkGrove.worktrees` |
+| `cleanStaleFavorites` | `overflow@2`   | `view == gitWorkGrove.worktrees` |
 
 ### Item Context (`view/item/context`)
 
-| Command | Group | When clause |
-|---|---|---|
-| `openInNewWindow` | `navigation@1` | `viewItem =~ /^worktree\|^workspaceFile\|^repository\|^favorite\./` AND NOT `viewItem =~ /prunable/` |
-| `openInCurrentWindow` | `navigation@2` | *(same)* |
-| `revealInOS` | `navigation@3` | *(same)* |
-| `openInTerminal` | `navigation@4` | *(same)* |
-| `copyName` | `5_cutcopypaste@1` | `viewItem =~ /^worktree\|^workspaceFile\|^repository\|^favorite\./` |
-| `copyPath` | `5_cutcopypaste@2` | *(same as copyName)* AND NOT `viewItem =~ /prunable/` |
-| `copyMissingPath` | `5_cutcopypaste@2` | `viewItem =~ /prunable/` |
-| `copyWorktreeConfigPath` | `5_cutcopypaste@3` | `viewItem =~ /prunable/` |
-| `customCommand.directory` | `custom@1` | `hasCustomCommands.directory` AND `viewItem =~ /^worktree\|^repository\|^favorite\./` AND NOT `viewItem =~ /workspaceFile/` AND NOT `viewItem =~ /prunable/` |
-| `customCommand.workspace` | `custom@1` | `hasCustomCommands.workspace` AND `viewItem =~ /^workspaceFile\|^favorite\.workspaceFile/` |
-| `openInTerminal` | `inline` | `viewItem =~ /^worktree\|^workspaceFile\|^repository/` AND NOT `viewItem =~ /favorite/` AND NOT `viewItem =~ /prunable/` |
-| `addFavorite` | `inline` | `viewItem =~ /^worktree\|^workspaceFile\|^repository/` AND NOT `viewItem =~ /favorite/` AND NOT `viewItem =~ /prunable/` |
-| `removeFavorite` | `inline` | `viewItem =~ /favorite/` |
-| `moveFavoriteUp` | `inline` | `viewItem =~ /^favorite\./` |
-| `moveFavoriteDown` | `inline` | `viewItem =~ /^favorite\./` |
+| Command                   | Group              | When clause                                                                                                                                                  |
+| ------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `openInNewWindow`         | `navigation@1`     | `viewItem =~ /^worktree\|^workspaceFile\|^repository\|^favorite\./` AND NOT `viewItem =~ /prunable/`                                                         |
+| `openInCurrentWindow`     | `navigation@2`     | _(same)_                                                                                                                                                     |
+| `revealInOS`              | `navigation@3`     | _(same)_                                                                                                                                                     |
+| `openInTerminal`          | `navigation@4`     | _(same)_                                                                                                                                                     |
+| `copyName`                | `5_cutcopypaste@1` | `viewItem =~ /^worktree\|^workspaceFile\|^repository\|^favorite\./`                                                                                          |
+| `copyPath`                | `5_cutcopypaste@2` | _(same as copyName)_ AND NOT `viewItem =~ /prunable/`                                                                                                        |
+| `copyMissingPath`         | `5_cutcopypaste@2` | `viewItem =~ /prunable/`                                                                                                                                     |
+| `copyWorktreeConfigPath`  | `5_cutcopypaste@3` | `viewItem =~ /prunable/`                                                                                                                                     |
+| `customCommand.directory` | `custom@1`         | `hasCustomCommands.directory` AND `viewItem =~ /^worktree\|^repository\|^favorite\./` AND NOT `viewItem =~ /workspaceFile/` AND NOT `viewItem =~ /prunable/` |
+| `customCommand.workspace` | `custom@1`         | `hasCustomCommands.workspace` AND `viewItem =~ /^workspaceFile\|^favorite\.workspaceFile/`                                                                   |
+| `openInTerminal`          | `inline`           | `viewItem =~ /^worktree\|^workspaceFile\|^repository/` AND NOT `viewItem =~ /favorite/` AND NOT `viewItem =~ /prunable/`                                     |
+| `addFavorite`             | `inline`           | `viewItem =~ /^worktree\|^workspaceFile\|^repository/` AND NOT `viewItem =~ /favorite/` AND NOT `viewItem =~ /prunable/`                                     |
+| `removeFavorite`          | `inline`           | `viewItem =~ /favorite/`                                                                                                                                     |
+| `moveFavoriteUp`          | `inline`           | `viewItem =~ /^favorite\./`                                                                                                                                  |
+| `moveFavoriteDown`        | `inline`           | `viewItem =~ /^favorite\./`                                                                                                                                  |
 
 ## Command Behaviors
 
@@ -161,9 +161,9 @@ Shows a QuickPick of user-defined commands configured in settings. See [Custom C
 
 ## Context Keys
 
-| Key | Set when |
-|---|---|
-| `gitWorkGrove.hasRepository` | A git repository is found in workspace folders |
-| `gitWorkGrove.gitUnavailable` | `git --version` fails |
+| Key                                        | Set when                                                        |
+| ------------------------------------------ | --------------------------------------------------------------- |
+| `gitWorkGrove.hasRepository`               | A git repository is found in workspace folders                  |
+| `gitWorkGrove.gitUnavailable`              | `git --version` fails                                           |
 | `gitWorkGrove.hasCustomCommands.directory` | `customCommands.directory` setting has at least one valid entry |
 | `gitWorkGrove.hasCustomCommands.workspace` | `customCommands.workspace` setting has at least one valid entry |

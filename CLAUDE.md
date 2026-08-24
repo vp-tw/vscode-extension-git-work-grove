@@ -14,27 +14,27 @@ Design specs live in `docs/spec/`. These are the **source of truth** for how fea
 
 ### Current Specs
 
-| Spec | Covers |
-|------|--------|
-| `docs/spec/tree-structure.md` | 4 fundamental types, node hierarchy, icons, collapsible states |
-| `docs/spec/current-indicator.md` | Single-current-item rule, detection logic, visual effects |
-| `docs/spec/favorites.md` | Data model, resolution, ordering, drag-and-drop, stale cleanup |
-| `docs/spec/templates.md` | 8 template types, variables, defaults, selection logic |
-| `docs/spec/commands.md` | All commands, menu placement, behaviors |
-| `docs/spec/workspace-scanning.md` | File discovery, include/exclude patterns, limits |
-| `docs/spec/open-behavior.md` | Open modes, URI resolution, click handling |
-| `docs/spec/open-in-terminal.md` | CWD resolution, terminal naming, prunable guard |
-| `docs/spec/empty-states.md` | Git unavailable, no repository, no worktrees messages |
-| `docs/spec/custom-commands.md` | Custom commands: settings, execution, context menu |
+| Spec                              | Covers                                                         |
+| --------------------------------- | -------------------------------------------------------------- |
+| `docs/spec/tree-structure.md`     | 4 fundamental types, node hierarchy, icons, collapsible states |
+| `docs/spec/current-indicator.md`  | Single-current-item rule, detection logic, visual effects      |
+| `docs/spec/favorites.md`          | Data model, resolution, ordering, drag-and-drop, stale cleanup |
+| `docs/spec/templates.md`          | 8 template types, variables, defaults, selection logic         |
+| `docs/spec/commands.md`           | All commands, menu placement, behaviors                        |
+| `docs/spec/workspace-scanning.md` | File discovery, include/exclude patterns, limits               |
+| `docs/spec/open-behavior.md`      | Open modes, URI resolution, click handling                     |
+| `docs/spec/open-in-terminal.md`   | CWD resolution, terminal naming, prunable guard                |
+| `docs/spec/empty-states.md`       | Git unavailable, no repository, no worktrees messages          |
+| `docs/spec/custom-commands.md`    | Custom commands: settings, execution, context menu             |
 
 ## The 4 Fundamental Types
 
 **Critical design principle:** Every item in the tree falls into one of 4 categories based on two axes. All templates, icons, context values, and behaviors must properly distinguish these 4 types:
 
-|  | Repository (main worktree) | Linked worktree |
-|---|---|---|
-| **Worktree itself** | Repository | Worktree |
-| **Workspace file under it** | Repository Workspace | Worktree Workspace |
+|                             | Repository (main worktree) | Linked worktree    |
+| --------------------------- | -------------------------- | ------------------ |
+| **Worktree itself**         | Repository                 | Worktree           |
+| **Workspace file under it** | Repository Workspace       | Worktree Workspace |
 
 With favorites, these become 8 item types (4 normal + 4 favorite). Never conflate repository workspace with worktree workspace — they have different available template variables and may display different information.
 
@@ -44,7 +44,7 @@ When modifying features or behavior, **always update the corresponding documenta
 
 - **README.md** — Update the Usage, Settings, Commands, or Features sections if user-facing behavior changes
 - **docs/templates.md** — Update if template variables, syntax, or defaults change
-- **docs/spec/*.md** — Update the relevant spec (per Spec Maintenance Rules above)
+- **docs/spec/\*.md** — Update the relevant spec (per Spec Maintenance Rules above)
 
 All three layers (README, user docs, specs) must stay in sync with the code.
 

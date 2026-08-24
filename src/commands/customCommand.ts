@@ -14,8 +14,11 @@ import { log, logError } from "../utils/outputChannel.js";
 import { resolveItemContext } from "../utils/resolveItemContext.js";
 import { renderTemplate } from "../utils/template.js";
 
-function renderCommand(config: CustomCommandConfig, vars: Record<string, string>): { args: Array<string>; bin: string; env: Record<string, string> } {
-  const rendered = config.command.map(part => renderTemplate(part, vars));
+function renderCommand(
+  config: CustomCommandConfig,
+  vars: Record<string, string>,
+): { args: Array<string>; bin: string; env: Record<string, string> } {
+  const rendered = config.command.map((part) => renderTemplate(part, vars));
   const env: Record<string, string> = {};
   for (const [key, value] of Object.entries(config.env ?? {})) {
     env[key] = renderTemplate(value, vars);
@@ -23,7 +26,12 @@ function renderCommand(config: CustomCommandConfig, vars: Record<string, string>
   return { args: rendered.slice(1), bin: rendered[0], env };
 }
 
-function spawnCommand(bin: string, args: Array<string>, env: Record<string, string>, cwd: string): void {
+function spawnCommand(
+  bin: string,
+  args: Array<string>,
+  env: Record<string, string>,
+  cwd: string,
+): void {
   try {
     const child = spawn(bin, args, {
       cwd,
@@ -35,14 +43,13 @@ function spawnCommand(bin: string, args: Array<string>, env: Record<string, stri
     child.unref();
     child.on("error", (err) => {
       logError(`Failed to run '${bin}'`, err);
-      void vscode.window.showErrorMessage(
-        `Failed to run '${bin}': ${err.message}`,
-        "Show Logs",
-      ).then((action) => {
-        if (action === "Show Logs") {
-          void vscode.commands.executeCommand(CMD_SHOW_OUTPUT);
-        }
-      });
+      void vscode.window
+        .showErrorMessage(`Failed to run '${bin}': ${err.message}`, "Show Logs")
+        .then((action) => {
+          if (action === "Show Logs") {
+            void vscode.commands.executeCommand(CMD_SHOW_OUTPUT);
+          }
+        });
     });
     log(`Custom command: ${bin} ${args.join(" ")}`);
   } catch (error) {
@@ -51,7 +58,13 @@ function spawnCommand(bin: string, args: Array<string>, env: Record<string, stri
   }
 }
 
-function terminalCommand(label: string, bin: string, args: Array<string>, env: Record<string, string>, cwd: string): void {
+function terminalCommand(
+  label: string,
+  bin: string,
+  args: Array<string>,
+  env: Record<string, string>,
+  cwd: string,
+): void {
   try {
     const terminal = vscode.window.createTerminal({ cwd, env, name: label });
     terminal.sendText(quote([bin, ...args]));

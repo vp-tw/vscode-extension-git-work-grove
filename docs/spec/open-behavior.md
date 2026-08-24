@@ -4,8 +4,8 @@ Controls how items are opened when clicked or via context menu commands.
 
 ## Setting
 
-| Setting | Type | Default | Scope |
-|---|---|---|---|
+| Setting                       | Type                                                    | Default | Scope    |
+| ----------------------------- | ------------------------------------------------------- | ------- | -------- |
 | `git-work-grove.openBehavior` | `"ask" \| "newWindow" \| "currentWindow" \| "terminal"` | `"ask"` | resource |
 
 ## Modes
@@ -37,27 +37,27 @@ Opens a new VS Code terminal at the item's location instead of opening a window.
 
 ## Trigger Points
 
-| Trigger | Behavior |
-|---|---|
-| Click on `WorkspaceFileItem` | Uses `openBehavior` setting |
-| Click on `FavoriteItem` | Uses `openBehavior` setting |
-| Click on `WorktreeItem` (has children) | Expands/collapses only (no open) |
-| Click on `WorktreeItem` (leaf, no workspace files) | Uses `openBehavior` setting |
-| Click on `GroupHeaderItem` (repository, has children) | Expands/collapses only (no open) |
-| Click on `GroupHeaderItem` (repository, leaf, no workspace files) | Uses `openBehavior` setting |
-| Context menu "Open in New Window" | Always new window (ignores setting) |
-| Context menu "Open in Current Window" | Always current window (ignores setting) |
-| Context menu "Open in Terminal" | Always opens terminal (ignores setting) |
+| Trigger                                                           | Behavior                                |
+| ----------------------------------------------------------------- | --------------------------------------- |
+| Click on `WorkspaceFileItem`                                      | Uses `openBehavior` setting             |
+| Click on `FavoriteItem`                                           | Uses `openBehavior` setting             |
+| Click on `WorktreeItem` (has children)                            | Expands/collapses only (no open)        |
+| Click on `WorktreeItem` (leaf, no workspace files)                | Uses `openBehavior` setting             |
+| Click on `GroupHeaderItem` (repository, has children)             | Expands/collapses only (no open)        |
+| Click on `GroupHeaderItem` (repository, leaf, no workspace files) | Uses `openBehavior` setting             |
+| Context menu "Open in New Window"                                 | Always new window (ignores setting)     |
+| Context menu "Open in Current Window"                             | Always current window (ignores setting) |
+| Context menu "Open in Terminal"                                   | Always opens terminal (ignores setting) |
 
 ## URI Resolution
 
 All open commands resolve a `vscode.Uri` from the tree item:
 
-| Item type | Property used |
-|---|---|
-| `FavoriteItem` | `favoritePath` |
+| Item type           | Property used            |
+| ------------------- | ------------------------ |
+| `FavoriteItem`      | `favoritePath`           |
 | `WorkspaceFileItem` | `workspaceFileInfo.path` |
-| `WorktreeItem` | `worktreeInfo.path` |
+| `WorktreeItem`      | `worktreeInfo.path`      |
 
 Detection order: `"favoritePath" in item` → `"workspaceFileInfo" in item` → `"worktreeInfo" in item`
 

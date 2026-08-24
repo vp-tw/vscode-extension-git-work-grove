@@ -8,17 +8,10 @@ import process from "node:process";
 
 import * as vscode from "vscode";
 
-import {
-  CACHE_TTL,
-  TIMEOUT_GIT_SHORT,
-} from "../constants.js";
+import { CACHE_TTL, TIMEOUT_GIT_SHORT } from "../constants.js";
 import { log, logError } from "../utils/outputChannel.js";
 
-function execGit(
-  args: Array<string>,
-  cwd: string,
-  timeout: number,
-): Promise<string> {
+function execGit(args: Array<string>, cwd: string, timeout: number): Promise<string> {
   return new Promise((resolve, reject) => {
     const proc = spawn("git", args, { cwd, stdio: ["ignore", "pipe", "pipe"] });
     let stdout = "";
@@ -49,7 +42,9 @@ function execGit(
   });
 }
 
-export function parseWorktreeListPorcelain(output: string): Array<Omit<WorktreeInfo, "isCurrent" | "isMain">> {
+export function parseWorktreeListPorcelain(
+  output: string,
+): Array<Omit<WorktreeInfo, "isCurrent" | "isMain">> {
   if (!output.trim()) {
     return [];
   }
@@ -74,9 +69,7 @@ export function parseWorktreeListPorcelain(output: string): Array<Omit<WorktreeI
         head = line.slice("HEAD ".length);
       } else if (line.startsWith("branch ")) {
         const ref = line.slice("branch ".length);
-        branch = ref.startsWith("refs/heads/")
-          ? ref.slice("refs/heads/".length)
-          : ref;
+        branch = ref.startsWith("refs/heads/") ? ref.slice("refs/heads/".length) : ref;
       } else if (line === "detached") {
         isDetached = true;
       } else if (line === "prunable") {
@@ -129,14 +122,8 @@ export class GitWorktreeService {
     if (!cwd) return undefined;
 
     try {
-      const result = await execGit(
-        ["rev-parse", "--git-common-dir"],
-        cwd,
-        TIMEOUT_GIT_SHORT,
-      );
-      const absolute = path.isAbsolute(result)
-        ? result
-        : path.resolve(cwd, result);
+      const result = await execGit(["rev-parse", "--git-common-dir"], cwd, TIMEOUT_GIT_SHORT);
+      const absolute = path.isAbsolute(result) ? result : path.resolve(cwd, result);
       return fs.realpathSync(absolute);
     } catch (error) {
       logError("Failed to resolve git common dir", error);
@@ -149,11 +136,7 @@ export class GitWorktreeService {
     if (!cwd) return undefined;
 
     try {
-      const result = await execGit(
-        ["rev-parse", "--show-toplevel"],
-        cwd,
-        TIMEOUT_GIT_SHORT,
-      );
+      const result = await execGit(["rev-parse", "--show-toplevel"], cwd, TIMEOUT_GIT_SHORT);
       return fs.realpathSync(result);
     } catch {
       try {
@@ -205,11 +188,7 @@ export class GitWorktreeService {
   }
 
   async list(forceRefresh = false): Promise<Array<WorktreeInfo>> {
-    if (
-      !forceRefresh
-      && this.cache
-      && Date.now() - this.cache.timestamp < CACHE_TTL
-    ) {
+    if (!forceRefresh && this.cache && Date.now() - this.cache.timestamp < CACHE_TTL) {
       return this.cache.entries;
     }
 
@@ -217,11 +196,7 @@ export class GitWorktreeService {
     if (!cwd) return [];
 
     try {
-      const output = await execGit(
-        ["worktree", "list", "--porcelain"],
-        cwd,
-        TIMEOUT_GIT_SHORT,
-      );
+      const output = await execGit(["worktree", "list", "--porcelain"], cwd, TIMEOUT_GIT_SHORT);
       const parsed = parseWorktreeListPorcelain(output);
       const [currentPath, { nameMap, commonDir }] = await Promise.all([
         this.getCurrentWorktreePath(),
@@ -240,11 +215,12 @@ export class GitWorktreeService {
           }
         }
         const isPrunable = entry.isPrunable || (!isCurrent && !fs.existsSync(entry.path));
-        const configName = (normalizedPath ? nameMap.get(normalizedPath) : undefined)
-          ?? nameMap.get(path.normalize(entry.path));
+        const configName =
+          (normalizedPath ? nameMap.get(normalizedPath) : undefined) ??
+          nameMap.get(path.normalize(entry.path));
         const name = configName ?? path.basename(entry.path);
-        const configPath = commonDir && configName
-          ? path.join(commonDir, "worktrees", configName) : undefined;
+        const configPath =
+          commonDir && configName ? path.join(commonDir, "worktrees", configName) : undefined;
         return { ...entry, name, isCurrent, isMain: index === 0, isPrunable, configPath };
       });
 

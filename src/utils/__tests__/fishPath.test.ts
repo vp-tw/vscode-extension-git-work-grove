@@ -12,21 +12,19 @@ const { abbreviatePath } = await import("../fishPath.js");
 
 describe("abbreviatePath", () => {
   it("abbreviates home path with .git/worktrees", () => {
-    expect(
-      abbreviatePath("/Users/v/repo/vp-tw/main-repo/.git/worktrees/wt-hotfix"),
-    ).toBe("~/r/v/m/.git/worktrees/wt-hotfix");
+    expect(abbreviatePath("/Users/v/repo/vp-tw/main-repo/.git/worktrees/wt-hotfix")).toBe(
+      "~/r/v/m/.git/worktrees/wt-hotfix",
+    );
   });
 
   it("abbreviates non-home path with .git/worktrees", () => {
-    expect(
-      abbreviatePath("/tmp/grove-test/main-repo/.git/worktrees/wt-hotfix"),
-    ).toBe("/t/g/m/.git/worktrees/wt-hotfix");
+    expect(abbreviatePath("/tmp/grove-test/main-repo/.git/worktrees/wt-hotfix")).toBe(
+      "/t/g/m/.git/worktrees/wt-hotfix",
+    );
   });
 
   it("abbreviates path without .git — all but last component", () => {
-    expect(
-      abbreviatePath("/Users/v/repo/vp-tw/main-repo"),
-    ).toBe("~/r/v/main-repo");
+    expect(abbreviatePath("/Users/v/repo/vp-tw/main-repo")).toBe("~/r/v/main-repo");
   });
 
   it("handles single component after root", () => {

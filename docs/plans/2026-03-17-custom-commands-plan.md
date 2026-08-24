@@ -15,6 +15,7 @@
 ### Task 1: Add constants and config keys
 
 **Files:**
+
 - Modify: `src/constants.ts`
 
 **Step 1: Add new constants**
@@ -52,6 +53,7 @@ git commit -m "feat: add custom command constants"
 ### Task 2: Add `{dir}` variable to `workspaceFileVars()`
 
 **Files:**
+
 - Modify: `src/utils/template.ts`
 - Modify: `src/utils/__tests__/template.test.ts`
 
@@ -61,7 +63,11 @@ Add test to `src/utils/__tests__/template.test.ts`:
 
 ```typescript
 it("includes dir variable as parent directory of filePath", () => {
-  const vars = workspaceFileVars("my-workspace", "/repo/worktrees/feature/.code-workspace/my-workspace.code-workspace", undefined);
+  const vars = workspaceFileVars(
+    "my-workspace",
+    "/repo/worktrees/feature/.code-workspace/my-workspace.code-workspace",
+    undefined,
+  );
   expect(vars.dir).toBe("/repo/worktrees/feature/.code-workspace");
 });
 ```
@@ -76,7 +82,7 @@ Expected: FAIL — `vars.dir` is `undefined`
 In `src/utils/template.ts`, modify `workspaceFileVars()` to add `dir`:
 
 ```typescript
-import * as path from "node:path";  // add import at top
+import * as path from "node:path"; // add import at top
 
 export function workspaceFileVars(
   name: string,
@@ -112,6 +118,7 @@ git commit -m "feat: add {dir} template variable for workspace files"
 ### Task 3: Create custom command types and validation
 
 **Files:**
+
 - Create: `src/types/customCommand.ts` — OR add to existing `src/types.ts`
 - Create: `src/utils/__tests__/customCommandConfig.test.ts`
 - Create: `src/utils/customCommandConfig.ts`
@@ -234,6 +241,7 @@ git commit -m "feat: add custom command config types and validation"
 ### Task 4: Implement command handler with spawn logic
 
 **Files:**
+
 - Create: `src/commands/customCommand.ts`
 
 **Step 1: Create the command handler**
@@ -253,11 +261,59 @@ import { log, logError } from "../utils/outputChannel.js";
 import { renderTemplate, workspaceFileVars, worktreeVars } from "../utils/template.js";
 
 type CustomCommandItem =
-  | { favoritePath: string; favoriteType: "repo" | "worktree" | "workspaceFile"; worktreeInfo?: { isMain: boolean; name: string; path: string; head: string; branch: string | undefined; isDetached: boolean; isCurrent: boolean; isPrunable: boolean }; parentWorktreeInfo?: { isMain: boolean; name: string; path: string; head: string; branch: string | undefined; isDetached: boolean; isCurrent: boolean; isPrunable: boolean } }
-  | { workspaceFileInfo: { name: string; path: string }; parentWorktreeInfo: { isMain: boolean; name: string; path: string; head: string; branch: string | undefined; isDetached: boolean; isCurrent: boolean; isPrunable: boolean } }
-  | { worktreeInfo: { isMain: boolean; name: string; path: string; head: string; branch: string | undefined; isDetached: boolean; isCurrent: boolean; isPrunable: boolean } };
+  | {
+      favoritePath: string;
+      favoriteType: "repo" | "worktree" | "workspaceFile";
+      worktreeInfo?: {
+        isMain: boolean;
+        name: string;
+        path: string;
+        head: string;
+        branch: string | undefined;
+        isDetached: boolean;
+        isCurrent: boolean;
+        isPrunable: boolean;
+      };
+      parentWorktreeInfo?: {
+        isMain: boolean;
+        name: string;
+        path: string;
+        head: string;
+        branch: string | undefined;
+        isDetached: boolean;
+        isCurrent: boolean;
+        isPrunable: boolean;
+      };
+    }
+  | {
+      workspaceFileInfo: { name: string; path: string };
+      parentWorktreeInfo: {
+        isMain: boolean;
+        name: string;
+        path: string;
+        head: string;
+        branch: string | undefined;
+        isDetached: boolean;
+        isCurrent: boolean;
+        isPrunable: boolean;
+      };
+    }
+  | {
+      worktreeInfo: {
+        isMain: boolean;
+        name: string;
+        path: string;
+        head: string;
+        branch: string | undefined;
+        isDetached: boolean;
+        isCurrent: boolean;
+        isPrunable: boolean;
+      };
+    };
 
-function resolveVars(item: CustomCommandItem): { vars: Record<string, string>; cwd: string } | undefined {
+function resolveVars(
+  item: CustomCommandItem,
+): { vars: Record<string, string>; cwd: string } | undefined {
   // FavoriteItem
   if ("favoritePath" in item) {
     switch (item.favoriteType) {
@@ -276,7 +332,11 @@ function resolveVars(item: CustomCommandItem): { vars: Record<string, string>; c
 
   // WorkspaceFileItem
   if ("workspaceFileInfo" in item) {
-    const vars = workspaceFileVars(item.workspaceFileInfo.name, item.workspaceFileInfo.path, item.parentWorktreeInfo);
+    const vars = workspaceFileVars(
+      item.workspaceFileInfo.name,
+      item.workspaceFileInfo.path,
+      item.parentWorktreeInfo,
+    );
     return { vars, cwd: path.dirname(item.workspaceFileInfo.path) };
   }
 
@@ -288,8 +348,11 @@ function resolveVars(item: CustomCommandItem): { vars: Record<string, string>; c
   return undefined;
 }
 
-function renderCommand(config: CustomCommandConfig, vars: Record<string, string>): { bin: string; args: string[]; env: Record<string, string> } {
-  const rendered = config.command.map(part => renderTemplate(part, vars));
+function renderCommand(
+  config: CustomCommandConfig,
+  vars: Record<string, string>,
+): { bin: string; args: string[]; env: Record<string, string> } {
+  const rendered = config.command.map((part) => renderTemplate(part, vars));
   const env: Record<string, string> = {};
   for (const [key, value] of Object.entries(config.env ?? {})) {
     env[key] = renderTemplate(value, vars);
@@ -309,14 +372,13 @@ function spawnCommand(bin: string, args: string[], env: Record<string, string>, 
     child.unref();
     child.on("error", (err) => {
       logError(`Failed to run '${bin}'`, err);
-      void vscode.window.showErrorMessage(
-        `Failed to run '${bin}': ${err.message}`,
-        "Show Logs",
-      ).then((action) => {
-        if (action === "Show Logs") {
-          void vscode.commands.executeCommand("gitWorkGrove.showOutput");
-        }
-      });
+      void vscode.window
+        .showErrorMessage(`Failed to run '${bin}': ${err.message}`, "Show Logs")
+        .then((action) => {
+          if (action === "Show Logs") {
+            void vscode.commands.executeCommand("gitWorkGrove.showOutput");
+          }
+        });
     });
     log(`Custom command: ${bin} ${args.join(" ")}`);
   } catch (error) {
@@ -374,6 +436,7 @@ git commit -m "feat: implement custom command handler with spawn and QuickPick"
 ### Task 5: Register commands and context keys in extension.ts
 
 **Files:**
+
 - Modify: `src/extension.ts`
 
 **Step 1: Add imports**
@@ -462,6 +525,7 @@ git commit -m "feat: register custom command handlers and context keys"
 ### Task 6: Add commands, menus, and settings to package.json
 
 **Files:**
+
 - Modify: `package.json`
 
 **Step 1: Add command declarations**
@@ -574,6 +638,7 @@ git commit -m "feat: add custom commands to package.json (commands, menus, setti
 ### Task 7: Create spec and update documentation
 
 **Files:**
+
 - Create: `docs/spec/custom-commands.md`
 - Modify: `docs/templates.md` (add `{dir}` variable)
 - Modify: `README.md` (add Custom Commands section)
@@ -612,6 +677,7 @@ git commit -m "docs: add custom commands spec and update documentation"
 ### Task 8: Add changeset
 
 **Files:**
+
 - Create: `.changeset/<name>.md`
 
 **Step 1: Create changeset**
@@ -655,6 +721,7 @@ Expected: PASS
 Run: `pnpm local:install`
 
 Manual verification:
+
 1. Add a custom command to settings (e.g., `"git-work-grove.customCommands.directory": [{"label": "Open in Finder", "command": ["open", "{path}"]}]`)
 2. Right-click a worktree → "Custom Commands..." should appear
 3. Select → Finder should open at the worktree path

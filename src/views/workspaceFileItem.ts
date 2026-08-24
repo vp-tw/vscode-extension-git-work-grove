@@ -17,10 +17,19 @@ export class WorkspaceFileItem extends vscode.TreeItem {
   readonly workspaceFileInfo: WorkspaceFileInfo;
   readonly parentWorktreeInfo: WorktreeInfo;
 
-  constructor(info: WorkspaceFileInfo, isCurrent: boolean, isFavorite: boolean, parent: WorktreeInfo) {
+  constructor(
+    info: WorkspaceFileInfo,
+    isCurrent: boolean,
+    isFavorite: boolean,
+    parent: WorktreeInfo,
+  ) {
     const vars = workspaceFileVars(info.name, info.path, parent);
-    const labelTemplate = parent.isMain ? getRepositoryWorkspaceLabel() : getWorktreeWorkspaceLabel();
-    const descTemplate = parent.isMain ? getRepositoryWorkspaceDescription() : getWorktreeWorkspaceDescription();
+    const labelTemplate = parent.isMain
+      ? getRepositoryWorkspaceLabel()
+      : getWorktreeWorkspaceLabel();
+    const descTemplate = parent.isMain
+      ? getRepositoryWorkspaceDescription()
+      : getWorktreeWorkspaceDescription();
     super(renderTemplate(labelTemplate, vars), vscode.TreeItemCollapsibleState.None);
     this.workspaceFileInfo = info;
     this.parentWorktreeInfo = parent;

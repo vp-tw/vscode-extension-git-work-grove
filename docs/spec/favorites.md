@@ -34,8 +34,8 @@ interface ResolvedFavorite {
   path: string;
   displayName: string;
   isCurrent: boolean;
-  worktreeInfo?: WorktreeInfo;         // set for repo/worktree types
-  parentWorktreeInfo?: WorktreeInfo;   // set for workspaceFile type
+  worktreeInfo?: WorktreeInfo; // set for repo/worktree types
+  parentWorktreeInfo?: WorktreeInfo; // set for workspaceFile type
 }
 ```
 
@@ -91,10 +91,10 @@ Current items (contextValue contains "current") are skipped — clicking the alr
 
 ## Context Values
 
-| Type | contextValue |
-|---|---|
-| Favorited repo | `favorite.repo[.current]` |
-| Favorited worktree | `favorite.worktree[.current]` |
+| Type                     | contextValue                       |
+| ------------------------ | ---------------------------------- |
+| Favorited repo           | `favorite.repo[.current]`          |
+| Favorited worktree       | `favorite.worktree[.current]`      |
 | Favorited workspace file | `favorite.workspaceFile[.current]` |
 
 ## Menu Visibility

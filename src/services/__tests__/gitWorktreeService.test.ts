@@ -44,11 +44,7 @@ describe("parseWorktreeListPorcelain", () => {
   });
 
   it("parses detached HEAD worktree", () => {
-    const output = [
-      "worktree /Users/v/wt/experiment",
-      "HEAD 789abcdef0123",
-      "detached",
-    ].join("\n");
+    const output = ["worktree /Users/v/wt/experiment", "HEAD 789abcdef0123", "detached"].join("\n");
 
     const result = parseWorktreeListPorcelain(output);
 
